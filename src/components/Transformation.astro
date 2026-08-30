@@ -3,12 +3,16 @@
 // Grid de 3 tarjetas con antes/después medibles.
 // Avatares reales (nunca ilustraciones ni iniciales).
 
+import { Image } from "astro:assets";
+import sarayAvatar from "../assets/avatars/saray-foronda.jpg";
+
 const cases = [
   {
     id: "felipe",
     headline: "Sistema MRP construido en <accent>3 horas</accent> — eliminó el trabajo manual que le tomaba toda la mañana",
     name: "Felipe Gómez",
     role: "Gerente General, Folcol",
+    avatar: null,
     extra: null,
   },
   {
@@ -16,6 +20,7 @@ const cases = [
     headline: "Reporte de conciliación de cartera: de un día completo a <accent>2 minutos</accent>",
     name: "Saray Foronda",
     role: "Asistente de facturación",
+    avatar: sarayAvatar,
     extra: null,
   },
   {
@@ -23,6 +28,7 @@ const cases = [
     headline: "Sistema de retención en la fuente que detectó <accent>2 errores reales</accent> que llevaban tiempo pasando",
     name: "Vanessa Colorado",
     role: "Contadora pública",
+    avatar: null,
     extra: "empezó el curso diciendo \"no tengo ni idea de cómo funciona\"",
   },
 ];
@@ -62,8 +68,12 @@ const cases = [
             </div>
             <div style="display: flex; align-items: center; gap: 12px; padding-top: 12px; border-top: 1px solid var(--border-subtle);">
               <div class="avatar-slot">
-                {/* TODO: <Image src={avatar[c.id]} alt={c.name} /> */}
-                <span>{c.name.split(" ").map((n) => n[0]).join("")}</span>
+                {c.avatar ? (
+                  <Image src={c.avatar} alt={c.name} width={144} height={144} loading="lazy" />
+                ) : (
+                  /* TODO: reemplazar por la foto real cuando la tengamos */
+                  <span>{c.name.split(" ").map((n) => n[0]).join("")}</span>
+                )}
               </div>
               <div style="display: flex; flex-direction: column; gap: 1px;">
                 <p style="margin: 0; font-size: 14px; font-weight: 600; color: var(--fg-2);">
@@ -114,5 +124,11 @@ const cases = [
     font-weight: 700;
     color: var(--fg-3);
     font-size: 20px;
+  }
+  .avatar-slot :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 </style>
