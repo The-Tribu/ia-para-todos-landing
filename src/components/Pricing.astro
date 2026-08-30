@@ -76,10 +76,17 @@ const { cuposDisponibles = 4 } = Astro.props;
         Precio de referencia del programa: <s style="color: var(--fg-4);">$600.000 COP</s> — no
         se vende a este nivel.
       </p>
-      <a href="#registro" class="btn-primary" style="padding: 14px 26px;">Reserva tu cupo</a>
+      <a href="#registro" class="btn-primary" style="padding: 14px 26px;" id="pricing-cta">Reserva tu cupo</a>
     </div>
   </div>
 </section>
+
+<script>
+  import { track } from "@vercel/analytics";
+  document.getElementById("pricing-cta")?.addEventListener("click", () => {
+    track("cta_click", { location: "pricing" });
+  });
+</script>
 
 <style>
   .price-card {

@@ -12,7 +12,6 @@ const {
   description = "Curso presencial en Cartago para profesionales que ya usan IA pero quieren sacarle el jugo. 4 sábados, 12 horas, sin necesitar programar.",
 } = Astro.props;
 
-const gaId = import.meta.env.GA_MEASUREMENT_ID;
 const metaPixelId = import.meta.env.META_PIXEL_ID;
 ---
 
@@ -31,25 +30,10 @@ const metaPixelId = import.meta.env.META_PIXEL_ID;
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="es_CO" />
 
-    {
-      gaId && (
-        <>
-          <script
-            is:inline
-            async
-            src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
-          />
-          <script is:inline define:vars={{ gaId }}>
-            {`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', gaId);
-            `}
-          </script>
-        </>
-      )
-    }
+    <script>
+      import { inject } from "@vercel/analytics";
+      inject();
+    </script>
 
     {
       metaPixelId && (

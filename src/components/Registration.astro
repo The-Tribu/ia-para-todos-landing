@@ -77,6 +77,8 @@ const { cuposDisponibles = 4 } = Astro.props;
 </section>
 
 <script>
+  import { track } from "@vercel/analytics";
+
   const form = document.getElementById("form-registro") as HTMLFormElement | null;
   const confirmacion = document.getElementById("confirmacion");
   const saludoEl = document.getElementById("saludo-confirmacion");
@@ -101,6 +103,8 @@ const { cuposDisponibles = 4 } = Astro.props;
       profesion: data.get("profesion") as string,
     };
 
+    track("registration_attempt");
+
     try {
       const res = await fetch("/api/register", {
         method: "POST",
@@ -113,10 +117,7 @@ const { cuposDisponibles = 4 } = Astro.props;
         throw new Error(body.error || "No pudimos guardar tu registro");
       }
 
-      // Analytics event
-      if (typeof window.gtag === "function") {
-        window.gtag("event", "form_submit", { form_id: "registro_cohorte_3" });
-      }
+      track("registration_success", { form_id: "registro_cohorte_3" });
       if (typeof window.fbq === "function") {
         window.fbq("track", "Lead");
       }
@@ -127,6 +128,7 @@ const { cuposDisponibles = 4 } = Astro.props;
       confirmacion?.removeAttribute("hidden");
     } catch (err) {
       const message = err instanceof Error ? err.message : "Error al enviar";
+      track("registration_error", { error: message });
       if (errorEl) {
         errorEl.textContent = message;
         errorEl.removeAttribute("hidden");

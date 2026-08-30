@@ -37,10 +37,17 @@
         4 sábados presenciales en Cartago · 12 horas · Sin necesitar saber programar
       </p>
       <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-        <a href="#registro" class="btn-primary" style="padding: 16px 30px; font-size: 17px;">
+        <a href="#registro" class="btn-primary" style="padding: 16px 30px; font-size: 17px;" id="hero-cta">
           Reserva tu cupo
         </a>
       </div>
     </div>
   </div>
 </section>
+
+<script>
+  import { track } from "@vercel/analytics";
+  document.getElementById("hero-cta")?.addEventListener("click", () => {
+    track("cta_click", { location: "hero" });
+  });
+</script>
