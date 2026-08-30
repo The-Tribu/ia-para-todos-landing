@@ -39,7 +39,16 @@ const { cuposDisponibles = 4 } = Astro.props;
         </label>
         <label class="form-label">
           Teléfono / WhatsApp
-          <input type="tel" name="telefono" required class="form-input" autocomplete="tel" inputmode="tel" />
+          <div class="tel-wrapper">
+            <span class="tel-prefix">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 2" width="22" height="14" style="display:block;border-radius:2px">
+                <rect width="4" height="2" fill="#CE1126"/>
+                <rect width="4" height="1.5" fill="#003087"/>
+                <rect width="4" height="1" fill="#FCD116"/>
+              </svg>
+            </span>
+            <input type="tel" name="telefono" required class="form-input tel-input" autocomplete="tel" inputmode="numeric" placeholder="300 000 0000" />
+          </div>
         </label>
         <label class="form-label">
           Profesión
@@ -84,10 +93,11 @@ const { cuposDisponibles = 4 } = Astro.props;
     btn.textContent = "Enviando…";
 
     const data = new FormData(form);
+    const rawTelefono = (data.get("telefono") as string).replace(/\D/g, "");
     const payload = {
       nombre: data.get("nombre") as string,
       email: data.get("email") as string,
-      telefono: data.get("telefono") as string,
+      telefono: `+57${rawTelefono}`,
       profesion: data.get("profesion") as string,
     };
 
@@ -113,7 +123,7 @@ const { cuposDisponibles = 4 } = Astro.props;
 
       const firstName = payload.nombre.split(" ")[0];
       if (saludoEl) saludoEl.textContent = `${firstName}, tu lugar está apartado.`;
-      form.setAttribute("hidden", "");
+      form.style.display = "none";
       confirmacion?.removeAttribute("hidden");
     } catch (err) {
       const message = err instanceof Error ? err.message : "Error al enviar";
@@ -165,6 +175,37 @@ const { cuposDisponibles = 4 } = Astro.props;
     font-size: 13px;
     font-weight: 600;
     color: var(--fg-2);
+  }
+  .tel-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--bg-0);
+  }
+  .tel-wrapper:focus-within {
+    outline: 2px solid var(--accent);
+    outline-offset: -1px;
+  }
+  .tel-prefix {
+    padding: 0 8px;
+    background: var(--bg-1);
+    border-right: 1px solid var(--border-default);
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+  }
+  .tel-input {
+    border: none !important;
+    border-radius: 0 !important;
+    outline: none !important;
+    flex: 1;
+    min-width: 0;
+  }
+  .tel-input:focus {
+    outline: none !important;
+    box-shadow: none !important;
   }
   .form-error {
     margin: 0;
