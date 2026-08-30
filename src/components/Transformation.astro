@@ -2,9 +2,7 @@
 // Sección 04 — Transformación (casos reales)
 // Grid de 3 tarjetas con antes/después medibles.
 // Avatares reales (nunca ilustraciones ni iniciales).
-
-import { Image } from "astro:assets";
-import sarayAvatar from "../assets/avatars/saray-foronda.jpg";
+// Fotos en public/avatars/ — se sirven tal cual, sin procesamiento.
 
 const cases = [
   {
@@ -20,7 +18,7 @@ const cases = [
     headline: "Reporte de conciliación de cartera: de un día completo a <accent>2 minutos</accent>",
     name: "Saray Foronda",
     role: "Asistente de facturación",
-    avatar: sarayAvatar,
+    avatar: "/avatars/saray-foronda.jpg",
     extra: null,
   },
   {
@@ -69,7 +67,7 @@ const cases = [
             <div style="display: flex; align-items: center; gap: 12px; padding-top: 12px; border-top: 1px solid var(--border-subtle);">
               <div class="avatar-slot">
                 {c.avatar ? (
-                  <Image src={c.avatar} alt={c.name} width={144} height={144} loading="lazy" />
+                  <img src={c.avatar} alt={c.name} width="144" height="144" loading="lazy" />
                 ) : (
                   /* TODO: reemplazar por la foto real cuando la tengamos */
                   <span>{c.name.split(" ").map((n) => n[0]).join("")}</span>
