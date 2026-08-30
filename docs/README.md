@@ -11,6 +11,7 @@ Documentación de estrategia y diseño importada del second brain (The Tribu Obs
 | [landing-estructura.md](./landing-estructura.md) | Estructura sección por sección con copy exacto |
 | [prompt-diseno.md](./prompt-diseno.md) | Prompt ejecutable para Claude Design (guía de maquetación) |
 | [stack.md](./stack.md) | Stack técnico, constraints de desarrollo y decisiones pendientes |
+| [design-system.md](./design-system.md) | Tokens, tipografía, colores, animación y reglas de uso del design system |
 
 ## Contexto del proyecto
 
