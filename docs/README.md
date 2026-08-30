@@ -12,6 +12,7 @@ Documentación de estrategia y diseño importada del second brain (The Tribu Obs
 | [prompt-diseno.md](./prompt-diseno.md) | Prompt ejecutable para Claude Design (guía de maquetación) |
 | [stack.md](./stack.md) | Stack técnico, constraints de desarrollo y decisiones pendientes |
 | [design-system.md](./design-system.md) | Tokens, tipografía, colores, animación y reglas de uso del design system |
+| [landing-reference.html](./landing-reference.html) | Diseño completo de la landing en HTML estático — referencia visual para implementar en Astro |
 
 ## Contexto del proyecto
 

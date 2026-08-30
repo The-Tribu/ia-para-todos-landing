@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<!--
+  REFERENCIA DE DISEÑO — IA para Todos · Landing Page Cohorte 3
+  Exportado desde Claude Design (proyecto: ia-para-todos-landing-page, 6fca8e65)
+
+  USO: Este archivo es la fuente de verdad visual para implementar la landing en Astro.
+  No es la implementación final — es la referencia de estructura, copy y estilos.
+
+  CSS DEL DESIGN SYSTEM:
+    En producción: importar src/styles/design-system.css (colors_and_type.css de The Tribu Design System)
+    El archivo define todos los tokens: --bg-*, --fg-*, --accent-*, --font-*, --space-*, etc.
+
+  IMAGE SLOTS:
+    Los elementos marcados como IMAGE SLOT deben reemplazarse con imágenes reales.
+    Cada uno tiene un id y descripción del contenido esperado.
+
+  SECCIONES (11):
+    01 Hero
+    02 Prueba social
+    03 El ciclo (diagrama circular)
+    04 Transformación (casos reales)
+    05 Quién enseña
+    06 Qué incluye
+    07 Testimonio (video Felipe)
+    08 Logística (mapa + datos)
+    09 Precio (3 niveles + escasez)
+    10 FAQ (acordeón)
+    11 Registro (formulario Brevo)
+-->
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IA para Todos · Cohorte 3 · Cartago</title>
+
+  <!--
+    En Astro: import '../styles/design-system.css' en el layout global.
+    Este <link> es solo para previsualizar este archivo de referencia.
+  -->
+  <style>
+    /* ── Animaciones de entrada ── */
+    @keyframes tribuRise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+    @keyframes tribuFade { from { opacity: 0; } to { opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) { [data-anim] { animation: none !important; } }
+
+    html { scroll-behavior: smooth; }
+    body { margin: 0; }
+    a { color: var(--accent-ink, #9d13bd); text-decoration: none; }
+    a:hover { color: var(--accent-600); text-decoration: underline; }
+    input, select, textarea { font-family: var(--font-body); }
+
+    /* ── Placeholder para image slots ── */
+    .image-slot {
+      width: 100%; height: 100%;
+      background: var(--bg-2, #eef0f8);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; color: var(--fg-3, #6c7192);
+      font-family: var(--font-body, system-ui);
+      text-align: center; padding: 16px; box-sizing: border-box;
+    }
+
+    /* ── Acordeón FAQ ── */
+    .faq-answer { overflow: hidden; max-height: 0; opacity: 0; transition: max-height .3s cubic-bezier(.16,1,.3,1), opacity .25s; }
+    .faq-item.open .faq-answer { max-height: 320px; opacity: 1; }
+    .faq-item.open .faq-toggle { content: "−"; }
+
+    /* ── Botón primario (gradiente) ── */
+    .btn-primary {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--tribu-gradient-h, linear-gradient(90deg, #720cd4 0%, #c621e5 100%));
+      color: #fff; border: none; border-radius: var(--radius-md, 12px);
+      font-family: var(--font-body, system-ui); font-size: 16px; font-weight: 600;
+      cursor: pointer; box-shadow: var(--shadow-accent);
+      transition: transform .14s cubic-bezier(.16,1,.3,1), box-shadow .2s;
+      text-decoration: none;
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 14px 48px -8px rgba(198,33,229,.62); color: #fff; }
+    .btn-primary:active { transform: translateY(0); box-shadow: var(--shadow-accent); }
+
+    /* ── Tag/pill ── */
+    .tag {
+      display: inline-flex; align-items: center;
+      background: var(--bg-2, #eef0f8); border: 1px solid var(--border-default, rgba(15,18,48,0.12));
+      border-radius: var(--radius-pill, 999px);
+      font-family: var(--font-body, system-ui); font-size: 13.5px; font-weight: 600;
+      color: var(--fg-2, #454a6e); padding: 7px 14px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="tribu tribu-light" data-theme="light" style="background: var(--bg-0, #fff); color: var(--fg-1, #12132e); font-family: var(--font-body, system-ui); overflow-x: hidden;">
+
+  <!-- ════════════════════════════════════════════
+       01 HERO
+       Foto de fondo: salón Cotecnova o cohorte anterior
+       CTA hace scroll a sección #registro
+       ════════════════════════════════════════════ -->
+  <section data-screen-label="01 Hero" style="position: relative; min-height: min(88vh, 760px); display: flex; align-items: flex-end; padding: clamp(96px, 18vw, 200px) 0 clamp(48px, 7vw, 88px); overflow: hidden;">
+
+    <!-- IMAGE SLOT: Foto de fondo — salón de Cotecnova o cohorte anterior (rect, full bleed) -->
+    <div style="position: absolute; inset: 0;">
+      <div class="image-slot" data-slot="hero-salon" style="position: absolute; inset: 0;">
+        [IMAGE SLOT: hero-salon — Foto real del salón de Cotecnova o del grupo de una cohorte anterior]
+      </div>
+    </div>
+
+    <!-- Overlay degradado sobre la foto -->
+    <div style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.30) 55%, rgba(255,255,255,0.72) 88%, #ffffff 100%);"></div>
+    <div style="position: absolute; inset: 0; pointer-events: none; background: var(--tribu-glow);"></div>
+
+    <!-- Contenido hero -->
+    <div style="position: relative; width: 100%; max-width: 1080px; margin: 0 auto; padding: 0 20px;">
+      <div style="display: flex; flex-direction: column; gap: clamp(20px, 3vw, 28px); max-width: 760px; background: rgba(255,255,255,0.84); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); padding: clamp(24px, 4vw, 40px); box-shadow: var(--shadow-lg);">
+        <span class="eyebrow">Curso presencial · Cartago, Valle</span>
+        <h1 style="font-family: var(--font-display); font-weight: 900; font-size: clamp(38px, 8.2vw, 76px); line-height: 1.03; letter-spacing: -0.025em; margin: 0; color: var(--fg-1); text-wrap: balance;">
+          La usas. Pero sientes que no le sacas <span class="gradient-text">todo el jugo</span>.
+        </h1>
+        <p style="font-family: var(--font-body); font-size: clamp(16px, 2.4vw, 20px); line-height: 1.55; color: var(--fg-2); margin: 0; max-width: 30ch; font-weight: 500;">
+          4 sábados presenciales en Cartago · 12 horas · Sin necesitar saber programar
+        </p>
+        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+          <a href="#registro" class="btn-primary" style="padding: 16px 30px; font-size: 17px;">Reserva tu cupo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════
+       02 PRUEBA SOCIAL
+       Franja delgada. Solo la cifra.
+       ════════════════════════════════════════════ -->
+  <section data-screen-label="02 Prueba social" style="border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle); background: var(--bg-1);">
+    <div style="max-width: 1080px; margin: 0 auto; padding: 18px 20px; display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap;">
+      <p style="margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(17px, 2.6vw, 22px); color: var(--fg-1); letter-spacing: -0.01em;">
+        +23 profesionales ya se graduaron
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════
+       03 EL CICLO
+       Diagrama circular SVG (desktop) / chips lineales (móvil < 700px)
+       Sin botones. Sección de transición emocional, no de venta.
+       ════════════════════════════════════════════ -->
+  <section data-screen-label="03 El ciclo" style="padding: clamp(72px, 12vw, 140px) 0;">
+    <div style="max-width: 900px; margin: 0 auto; padding: 0 20px; display: flex; flex-direction: column; align-items: center; gap: clamp(32px, 5vw, 52px); text-align: center;">
+
+      <!-- DESKTOP: diagrama circular SVG (mostrar en ≥700px) -->
+      <div class="ciclo-amplio" style="position: relative; width: min(100%, 560px); aspect-ratio: 1;">
+        <svg viewBox="0 0 400 400" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible;">
+          <path d="M 234 6.9 A 196 196 0 0 1 393 166" fill="none" stroke="var(--fg-1)" stroke-opacity="0.16" stroke-width="1.5"></path>
+          <path d="M 393 234 A 196 196 0 0 1 234 393" fill="none" stroke="var(--fg-1)" stroke-opacity="0.16" stroke-width="1.5"></path>
+          <path d="M 166 393 A 196 196 0 0 1 7 234" fill="none" stroke="var(--fg-1)" stroke-opacity="0.16" stroke-width="1.5"></path>
+          <path d="M 7 166 A 196 196 0 0 1 166 6.9" fill="none" stroke="var(--accent-ink)" stroke-opacity="0.55" stroke-width="1.5" stroke-dasharray="5 7"></path>
+          <polygon points="0,-5.5 11,0 0,5.5" fill="var(--fg-1)" fill-opacity="0.32" transform="translate(339 61) rotate(45)"></polygon>
+          <polygon points="0,-5.5 11,0 0,5.5" fill="var(--fg-1)" fill-opacity="0.32" transform="translate(339 339) rotate(135)"></polygon>
+          <polygon points="0,-5.5 11,0 0,5.5" fill="var(--fg-1)" fill-opacity="0.32" transform="translate(61 339) rotate(225)"></polygon>
+          <polygon points="0,-5.5 11,0 0,5.5" fill="var(--accent-ink)" transform="translate(108 32.7) rotate(330)"></polygon>
+        </svg>
+        <span data-anim style="position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); white-space: nowrap; background: var(--bg-0); border: 1px solid var(--border-strong); border-radius: var(--radius-pill); padding: 9px 18px; font-family: var(--font-display); font-weight: 700; font-size: clamp(14px, 1.6vw, 18px); letter-spacing: -0.01em; color: var(--fg-1); animation: tribuFade .5s ease-out .05s both;">Abres el chat</span>
+        <span data-anim style="position: absolute; top: 50%; left: 100%; transform: translate(-50%, -50%); white-space: nowrap; background: var(--bg-0); border: 1px solid var(--border-strong); border-radius: var(--radius-pill); padding: 9px 18px; font-family: var(--font-display); font-weight: 700; font-size: clamp(14px, 1.6vw, 18px); letter-spacing: -0.01em; color: var(--fg-1); animation: tribuFade .5s ease-out .22s both;">Preguntas</span>
+        <span data-anim style="position: absolute; top: 100%; left: 50%; transform: translate(-50%, -50%); white-space: nowrap; background: var(--bg-0); border: 1px solid var(--border-strong); border-radius: var(--radius-pill); padding: 9px 18px; font-family: var(--font-display); font-weight: 700; font-size: clamp(14px, 1.6vw, 18px); letter-spacing: -0.01em; color: var(--fg-1); animation: tribuFade .5s ease-out .39s both;">Copias</span>
+        <span data-anim style="position: absolute; top: 50%; left: 0; transform: translate(-50%, -50%); white-space: nowrap; background: var(--bg-0); border: 1px solid var(--border-strong); border-radius: var(--radius-pill); padding: 9px 18px; font-family: var(--font-display); font-weight: 700; font-size: clamp(14px, 1.6vw, 18px); letter-spacing: -0.01em; color: var(--fg-1); animation: tribuFade .5s ease-out .56s both;">Pegas</span>
+        <span data-anim style="position: absolute; top: 15.5%; left: 15.5%; transform: translate(-50%, -50%) rotate(-45deg); white-space: nowrap; background: var(--bg-0); padding: 3px 9px; border-radius: var(--radius-pill); font-size: clamp(12px, 1.3vw, 14px); font-weight: 600; letter-spacing: 0.02em; color: var(--accent-ink); animation: tribuFade .5s ease-out .73s both;">mañana, otra vez</span>
+        <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); margin: 0; width: 54%; font-family: var(--font-display); font-weight: 700; font-size: clamp(16px, 2.4vw, 23px); line-height: 1.3; letter-spacing: -0.015em; color: var(--fg-1); text-wrap: pretty;">
+          Nadie te enseñó a exigirle más de una respuesta suelta.
+        </p>
+      </div>
+      <p style="margin: 0; max-width: 46ch; font-size: clamp(14px, 1.8vw, 16.5px); line-height: 1.6; color: var(--fg-3); text-wrap: pretty;">
+        Otros, en tu mismo trabajo y con la misma herramienta, ya lo automatizaron.
+      </p>
+
+      <!-- MOBILE FALLBACK (< 700px): chips lineales en lugar del diagrama SVG -->
+      <!--
+      <div class="ciclo-compacto" style="display: flex; flex-direction: column; align-items: center; gap: 18px;">
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px;">
+          <span style="background: var(--bg-0); border: 1px solid var(--border-strong); border-radius: var(--radius-pill); padding: 7px 13px; font-family: var(--font-display); font-weight: 700; font-size: 14px; color: var(--fg-1);">Abres el chat</span>
+          <span style="color: var(--fg-4);">→</span>
+          <span style="background: var(--bg-0); border: 1px solid var(--border-strong); border-radius: var(--radius-pill); padding: 7px 13px; font-family: var(--font-display); font-weight: 700; font-size: 14px; color: var(--fg-1);">Preguntas</span>
+          <span style="color: var(--fg-4);">→</span>
+          <span style="background: var(--bg-0); border: 1px solid var(--border-strong); border-radius: var(--radius-pill); padding: 7px 13px; font-family: var(--font-display); font-weight: 700; font-size: 14px; color: var(--fg-1);">Copias</span>
+          <span style="color: var(--fg-4);">→</span>
+          <span style="background: var(--bg-0); border: 1px solid var(--border-strong); border-radius: var(--radius-pill); padding: 7px 13px; font-family: var(--font-display); font-weight: 700; font-size: 14px; color: var(--fg-1);">Pegas</span>
+          <span style="color: var(--accent-ink); font-size: 15px;">↺</span>
+          <span style="font-size: 13px; font-weight: 600; color: var(--accent-ink);">mañana, otra vez</span>
+        </div>
+        <p style="margin: 0; max-width: 24ch; font-family: var(--font-display); font-weight: 700; font-size: 19px; line-height: 1.3; letter-spacing: -0.015em; color: var(--fg-1); text-wrap: pretty;">Nadie te enseñó a exigirle más de una respuesta suelta.</p>
+      </div>
+      -->
+
+      <!-- Cita textual al pie -->
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; padding-top: clamp(8px, 2vw, 16px); border-top: 1px solid var(--border-subtle); width: min(100%, 620px);">
+        <p style="margin: 0; font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: clamp(20px, 4vw, 34px); line-height: 1.25; letter-spacing: -0.02em; color: var(--fg-1);">
+          "La uso, pero no le saco todo el jugo"
+        </p>
+        <span class="caption" style="font-size: 13px; color: var(--fg-3);">la frase que más repiten los profesionales antes de tomar este curso</span>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════
+       04 TRANSFORMACIÓN
+       Grid de 3 tarjetas con casos reales.
+       Avatares reales (no ilustraciones, no iniciales).
+       ════════════════════════════════════════════ -->
+  <section data-screen-label="04 Transformación" style="padding: clamp(56px, 9vw, 104px) 0; background: var(--bg-1); border-top: 1px solid var(--border-subtle);">
+    <div style="max-width: 1080px; margin: 0 auto; padding: 0 20px; display: flex; flex-direction: column; gap: clamp(28px, 4vw, 44px);">
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <span class="eyebrow">Lo que salió de las cohortes</span>
+        <h2 style="font-family: var(--font-display); font-weight: 700; font-size: clamp(26px, 4.6vw, 40px); line-height: 1.15; letter-spacing: -0.02em; margin: 0;">
+          Gente con tu mismo cargo, con un resultado medible.
+        </h2>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
+
+        <!-- Tarjeta: Felipe -->
+        <div style="display: grid; grid-template-rows: 1fr auto; gap: 14px; padding: 26px; height: 100%; background: var(--bg-1); border: 1px solid var(--border-default); border-radius: var(--radius-lg); box-shadow: var(--shadow-md); box-sizing: border-box;">
+          <p style="margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(19px, 2.4vw, 23px); line-height: 1.3; letter-spacing: -0.015em; color: var(--fg-1);">
+            Sistema MRP construido en <span style="color: var(--accent-ink);">3 horas</span> — eliminó el trabajo manual que le tomaba toda la mañana
+          </p>
+          <div style="display: flex; align-items: center; gap: 12px; padding-top: 12px; border-top: 1px solid var(--border-subtle);">
+            <!-- IMAGE SLOT: avatar-felipe — Foto circular de Felipe Gómez -->
+            <div style="flex: 0 0 auto; width: 72px; height: 72px; border-radius: 999px; overflow: hidden; border: 1px solid var(--border-default);">
+              <div class="image-slot" data-slot="avatar-felipe">[Foto Felipe]</div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 1px;">
+              <p style="margin: 0; font-size: 14px; font-weight: 600; color: var(--fg-2);">Felipe Gómez</p>
+              <p style="margin: 0; font-size: 13px; color: var(--fg-3);">Gerente General, Folcol</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjeta: Saray -->
+        <div style="display: grid; grid-template-rows: 1fr auto; gap: 14px; padding: 26px; height: 100%; background: var(--bg-1); border: 1px solid var(--border-default); border-radius: var(--radius-lg); box-shadow: var(--shadow-md); box-sizing: border-box;">
+          <p style="margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(19px, 2.4vw, 23px); line-height: 1.3; letter-spacing: -0.015em; color: var(--fg-1);">
+            Reporte de conciliación de cartera: de un día completo a <span style="color: var(--accent-ink);">2 minutos</span>
+          </p>
+          <div style="display: flex; align-items: center; gap: 12px; padding-top: 12px; border-top: 1px solid var(--border-subtle);">
+            <!-- IMAGE SLOT: avatar-saray — Foto circular de Saray Foronda -->
+            <div style="flex: 0 0 auto; width: 72px; height: 72px; border-radius: 999px; overflow: hidden; border: 1px solid var(--border-default);">
+              <div class="image-slot" data-slot="avatar-saray">[Foto Saray]</div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 1px;">
+              <p style="margin: 0; font-size: 14px; font-weight: 600; color: var(--fg-2);">Saray Foronda</p>
+              <p style="margin: 0; font-size: 13px; color: var(--fg-3);">Asistente de facturación</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjeta: Vanessa -->
+        <div style="display: grid; grid-template-rows: 1fr auto; gap: 14px; padding: 26px; height: 100%; background: var(--bg-1); border: 1px solid var(--border-default); border-radius: var(--radius-lg); box-shadow: var(--shadow-md); box-sizing: border-box;">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <p style="margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(19px, 2.4vw, 23px); line-height: 1.3; letter-spacing: -0.015em; color: var(--fg-1);">
+              Sistema de retención en la fuente que detectó <span style="color: var(--accent-ink);">2 errores reales</span> que llevaban tiempo pasando
+            </p>
+            <p style="margin: 0; font-size: 13.5px; font-style: italic; line-height: 1.5; color: var(--fg-3);">
+              empezó el curso diciendo "no tengo ni idea de cómo funciona"
+            </p>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; padding-top: 12px; border-top: 1px solid var(--border-subtle);">
+            <!-- IMAGE SLOT: avatar-vanessa — Foto circular de Vanessa Colorado (pendiente autorización) -->
+            <div style="flex: 0 0 auto; width: 72px; height: 72px; border-radius: 999px; overflow: hidden; border: 1px solid var(--border-default);">
+              <div class="image-slot" data-slot="avatar-vanessa">[Foto Vanessa]</div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 1px;">
+              <p style="margin: 0; font-size: 14px; font-weight: 600; color: var(--fg-2);">Vanessa Colorado</p>
+              <p style="margin: 0; font-size: 13px; color: var(--fg-3);">Contadora pública</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════
+       05 QUIÉN ENSEÑA
+       Foto profesional de Jorge + bio en 2 párrafos + credenciales.
+       The Tribu aparece solo como dato de trayectoria.
+       ════════════════════════════════════════════ -->
+  <section data-screen-label="05 Quién enseña" style="padding: clamp(64px, 10vw, 120px) 0;">
+    <div style="max-width: 1080px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: clamp(28px, 5vw, 56px); align-items: start;">
+
+      <!-- IMAGE SLOT: jorge-foto — Foto profesional de Jorge Olarte (rect, aspect-ratio 4/5) -->
+      <div style="position: relative; width: 100%; aspect-ratio: 4 / 5; max-width: 420px; border-radius: var(--radius-xl); overflow: hidden; border: 1px solid var(--border-default);">
+        <div class="image-slot" data-slot="jorge-foto" style="height: 100%;">
+          [IMAGE SLOT: jorge-foto — Foto profesional de Jorge Olarte]
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 22px;">
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <span class="eyebrow">Quién enseña</span>
+          <h2 style="font-family: var(--font-display); font-weight: 700; font-size: clamp(26px, 4.6vw, 40px); line-height: 1.15; letter-spacing: -0.02em; margin: 0;">Jorge Olarte</h2>
+        </div>
+        <p style="margin: 0; font-size: clamp(15px, 2vw, 17px); line-height: 1.65; color: var(--fg-2); text-wrap: pretty;">
+          Estudié esto formalmente, antes de que fuera tendencia. Máster en Ingeniería de Software y especialización en ingeniería de IA — cuando explico por qué la IA alucina o qué es un token, no lo digo de oídas.
+        </p>
+        <p style="margin: 0; font-size: clamp(15px, 2vw, 17px); line-height: 1.65; color: var(--fg-2); text-wrap: pretty;">
+          Pero lo que hace que este curso funcione no es eso. Es que llevo años enseñándole a profesionales no técnicos: sé qué omitir, cómo traducir lo complejo a lo que de verdad importa, y cómo lograr que un abogado, un contador o un diseñador salga con algo que pueda usar el lunes.
+        </p>
+        <!-- Credenciales como línea escaneable, fuera de la prosa -->
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; padding-top: 4px;">
+          <span class="mono" style="font-family: var(--font-mono); font-size: 11.5px; color: var(--fg-3); background: var(--bg-2); border: 1px solid var(--border-subtle); border-radius: var(--radius-pill); padding: 6px 12px;">Máster en Ingeniería de Software · U. Pontificia de Salamanca</span>
+          <span class="mono" style="font-family: var(--font-mono); font-size: 11.5px; color: var(--fg-3); background: var(--bg-2); border: 1px solid var(--border-subtle); border-radius: var(--radius-pill); padding: 6px 12px;">AI Engineering Specialization · ByteByteGo, 2026</span>
+          <span class="mono" style="font-family: var(--font-mono); font-size: 11.5px; color: var(--fg-3); background: var(--bg-2); border: 1px solid var(--border-subtle); border-radius: var(--radius-pill); padding: 6px 12px;">Fundador de The Tribu</span>
+        </div>
+        <p style="margin: 0; font-size: 13px; line-height: 1.6; color: var(--fg-4);">
+          Publica semanalmente en el podcast y el newsletter de The Tribu sobre IA aplicada al trabajo.
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════
+       06 QUÉ INCLUYE
+       Lista vertical con ícono + título + detalle.
+       Íconos: Lucide (stroke, 22px, currentColor).
+       ════════════════════════════════════════════ -->
+  <section data-screen-label="06 Qué incluye" style="padding: clamp(56px, 9vw, 104px) 0; background: var(--bg-1); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);">
+    <div style="max-width: 1080px; margin: 0 auto; padding: 0 20px; display: flex; flex-direction: column; gap: clamp(28px, 4vw, 44px);">
+      <h2 style="font-family: var(--font-display); font-weight: 700; font-size: clamp(26px, 4.6vw, 40px); line-height: 1.15; letter-spacing: -0.02em; margin: 0;">Qué incluye</h2>
+      <div style="display: flex; flex-direction: column; max-width: 780px; border-top: 1px solid var(--border-default);">
+
+        <!-- Fila: Formación práctica -->
+        <div style="display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 6px 18px; align-items: start; padding: 20px 0; border-bottom: 1px solid var(--border-default);">
+          <!-- Ícono Lucide: Calendar -->
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--fg-3)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block; margin-top: 2px;"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M8 2v4M16 2v4M3 10h18"></path></svg>
+          <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 24px;">
+            <p style="margin: 0; flex: 0 0 auto; width: 190px; max-width: 100%; font-family: var(--font-display); font-weight: 700; font-size: clamp(17px, 2.2vw, 19px); color: var(--fg-1); letter-spacing: -0.01em;">Formación práctica</p>
+            <p style="margin: 0; flex: 1 1 220px; min-width: 0; font-size: 15.5px; line-height: 1.55; color: var(--fg-2);">12 horas · 4 sábados · 9:00 AM – 12:00 PM</p>
+          </div>
+        </div>
+
+        <!-- Fila: Claude Pro -->
+        <div style="display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 6px 18px; align-items: start; padding: 20px 0; border-bottom: 1px solid var(--border-default);">
+          <!-- Ícono Lucide: Key-round -->
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--fg-3)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block; margin-top: 2px;"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"></path><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle></svg>
+          <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 24px;">
+            <p style="margin: 0; flex: 0 0 auto; width: 190px; max-width: 100%; font-family: var(--font-display); font-weight: 700; font-size: clamp(17px, 2.2vw, 19px); color: var(--fg-1); letter-spacing: -0.01em;">Claude Pro</p>
+            <p style="margin: 0; flex: 1 1 220px; min-width: 0; font-size: 15.5px; line-height: 1.55; color: var(--fg-2);">Acceso durante todo el programa (~$86.000 COP de valor)</p>
+          </div>
+        </div>
+
+        <!-- Fila: Proyecto final (destacado con ícono en accent-ink) -->
+        <div style="display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 6px 18px; align-items: start; padding: 24px 0; border-bottom: 1px solid var(--border-default);">
+          <!-- Ícono Lucide: Wrench (accent) — el diferenciador -->
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--accent-ink)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block; margin-top: 2px;"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+          <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 24px;">
+            <div style="flex: 0 0 auto; width: 190px; max-width: 100%; display: flex; flex-direction: column; gap: 2px;">
+              <p style="margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(19px, 2.6vw, 22px); color: var(--fg-1); letter-spacing: -0.01em;">Proyecto final</p>
+              <span class="eyebrow" style="font-size: 10.5px;">el diferenciador</span>
+            </div>
+            <p style="margin: 0; flex: 1 1 220px; min-width: 0; font-size: 16.5px; line-height: 1.55; color: var(--fg-1);">Personalizado a la profesión del estudiante</p>
+          </div>
+        </div>
+
+        <!-- Fila: Certificado -->
+        <div style="display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 6px 18px; align-items: start; padding: 20px 0; border-bottom: 1px solid var(--border-default);">
+          <!-- Ícono Lucide: Award -->
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--fg-3)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block; margin-top: 2px;"><circle cx="12" cy="8" r="6"></circle><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path></svg>
+          <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 24px;">
+            <p style="margin: 0; flex: 0 0 auto; width: 190px; max-width: 100%; font-family: var(--font-display); font-weight: 700; font-size: clamp(17px, 2.2vw, 19px); color: var(--fg-1); letter-spacing: -0.01em;">Certificado</p>
+            <p style="margin: 0; flex: 1 1 220px; min-width: 0; font-size: 15.5px; line-height: 1.55; color: var(--fg-2);">Certificado virtual — <i>Inteligencia Artificial Aplicada al Trabajo Profesional</i> · apto para LinkedIn</p>
+          </div>
+        </div>
+
+        <!-- Fila: Comunidad -->
+        <div style="display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 6px 18px; align-items: start; padding: 20px 0; border-bottom: 1px solid var(--border-default);">
+          <!-- Ícono Lucide: Users -->
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--fg-3)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block; margin-top: 2px;"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 24px;">
+            <p style="margin: 0; flex: 0 0 auto; width: 190px; max-width: 100%; font-family: var(--font-display); font-weight: 700; font-size: clamp(17px, 2.2vw, 19px); color: var(--fg-1); letter-spacing: -0.01em;">Comunidad</p>
+            <p style="margin: 0; flex: 1 1 220px; min-width: 0; font-size: 15.5px; line-height: 1.55; color: var(--fg-2);">Grupo privado de WhatsApp con acceso directo al instructor</p>
+          </div>
+        </div>
+
+        <!-- Fila: Recursos -->
+        <div style="display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 6px 18px; align-items: start; padding: 20px 0; border-bottom: 1px solid var(--border-default);">
+          <!-- Ícono Lucide: Download -->
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--fg-3)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block; margin-top: 2px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5M12 15V3"></path></svg>
+          <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 24px;">
+            <p style="margin: 0; flex: 0 0 auto; width: 190px; max-width: 100%; font-family: var(--font-display); font-weight: 700; font-size: clamp(17px, 2.2vw, 19px); color: var(--fg-1); letter-spacing: -0.01em;">Recursos</p>
+            <p style="margin: 0; flex: 1 1 220px; min-width: 0; font-size: 15.5px; line-height: 1.55; color: var(--fg-2);">Materiales y recursos de por vida</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════
+       07 TESTIMONIO
+       Video vertical 9:16 + cita + atribución.
+       El video es el elemento principal — texto al lado.
+       ════════════════════════════════════════════ -->
+  <section data-screen-label="07 Testimonio" style="padding: clamp(64px, 10vw, 120px) 0;">
+    <div style="max-width: 1080px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: clamp(28px, 5vw, 56px); align-items: center;">
+
+      <!-- IMAGE SLOT: video-felipe — Miniatura del video vertical de Felipe Gómez (aspect-ratio 9/16) -->
+      <!-- En producción: reemplazar con <video> o embed, autoplay=false -->
+      <div style="position: relative; width: 100%; max-width: 330px; aspect-ratio: 9 / 16; border-radius: var(--radius-xl); overflow: hidden; border: 1px solid var(--border-default); box-shadow: var(--shadow-lg); cursor: pointer;">
+        <div class="image-slot" data-slot="video-felipe" style="height: 100%;">
+          [IMAGE SLOT: video-felipe — Miniatura del video vertical de Felipe Gómez · Pendiente edición]
+        </div>
+        <!-- Botón play (gradiente) -->
+        <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none;">
+          <div style="width: 68px; height: 68px; border-radius: 999px; background: var(--tribu-gradient); box-shadow: var(--shadow-accent); display: flex; align-items: center; justify-content: center;">
+            <div style="width: 0; height: 0; margin-left: 5px; border-left: 20px solid #fff; border-top: 12px solid transparent; border-bottom: 12px solid transparent;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 20px;">
+        <span class="eyebrow">Testimonio</span>
+        <p style="margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(24px, 3.8vw, 34px); line-height: 1.25; letter-spacing: -0.02em; color: var(--fg-1); text-wrap: pretty;">
+          "Más que tiempo es el enfoque que a uno le puede ahorrar esta herramienta."
+        </p>
+        <div>
+          <p style="margin: 0; font-size: 15px; font-weight: 600; color: var(--fg-2);">Felipe Gómez Ospina</p>
+          <p style="margin: 0; font-size: 14px; color: var(--fg-3);">Gerente General, Folcol Ltda.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════
+       08 LOGÍSTICA
+       Mapa embebido / captura + datos duros (dirección, fechas, qué llevar).
+       ════════════════════════════════════════════ -->
+  <section data-screen-label="08 Logística" style="padding: clamp(56px, 9vw, 104px) 0; background: var(--bg-1); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);">
+    <div style="max-width: 1080px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: clamp(24px, 4vw, 44px); align-items: stretch;">
+
+      <!-- IMAGE SLOT: mapa-cotecnova — Mapa o captura de ubicación de Cotecnova, Cartago -->
+      <div style="position: relative; width: 100%; min-height: 300px; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-default);">
+        <div class="image-slot" data-slot="mapa-cotecnova" style="height: 100%; min-height: 300px;">
+          [IMAGE SLOT: mapa-cotecnova — Mapa de Cotecnova, Cra. 4 #7-25, Cartago]
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 22px;">
+        <h2 style="font-family: var(--font-display); font-weight: 700; font-size: clamp(26px, 4.6vw, 40px); line-height: 1.15; letter-spacing: -0.02em; margin: 0;">Dónde y cuándo</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <span class="tag">Sáb 19 sep</span>
+          <span class="tag">Sáb 26 sep</span>
+          <span class="tag">Sáb 3 oct</span>
+          <span class="tag">Sáb 10 oct</span>
+          <span class="tag">9:00 AM – 12:00 PM</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; flex-direction: column; gap: 3px;">
+            <span style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-4);">Dirección</span>
+            <p style="margin: 0; font-size: 16px; line-height: 1.5; color: var(--fg-1);">Cotecnova — Cra. 4 #7-25, Cartago, Valle del Cauca</p>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 3px;">
+            <span style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-4);">Qué llevar</span>
+            <p style="margin: 0; font-size: 16px; line-height: 1.5; color: var(--fg-2);">Computador portátil — es requisito para los ejercicios prácticos.</p>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 3px;">
+            <span style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-4);">Cómo llegar</span>
+            <p style="margin: 0; font-size: 16px; line-height: 1.5; color: var(--fg-2);">A dos cuadras del parque principal. Parqueadero público sobre la Cra. 4.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════
+       09 PRECIO
+       3 tarjetas de precio + anclaje $600k tachado.
+       Pioneros: borde accent + glow (nivel vigente).
+       Early Bird y General: tarjetas neutras (futuras).
+       ════════════════════════════════════════════ -->
+  <section data-screen-label="09 Precio" style="padding: clamp(64px, 10vw, 120px) 0;">
+    <div style="max-width: 1080px; margin: 0 auto; padding: 0 20px; display: flex; flex-direction: column; gap: clamp(28px, 4vw, 40px);">
+      <div style="display: flex; flex-direction: column; gap: 12px; max-width: 640px;">
+        <h2 style="font-family: var(--font-display); font-weight: 700; font-size: clamp(26px, 4.6vw, 40px); line-height: 1.15; letter-spacing: -0.02em; margin: 0;">
+          12 cupos. Se acaban cuando se acaban las sillas.
+        </h2>
+        <p style="margin: 0; font-size: 16px; line-height: 1.6; color: var(--fg-2);">
+          Presencial, sin transmisión virtual. Cuando se acaban las sillas de Cotecnova, se acaban los cupos.
+        </p>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
+
+        <!-- Tarjeta Pioneros (nivel vigente — borde accent + glow) -->
+        <div style="position: relative; background: var(--bg-1); border: 1px solid var(--border-accent); border-radius: var(--radius-lg); padding: 26px; box-shadow: var(--shadow-accent); display: flex; flex-direction: column; gap: 8px;">
+          <div style="position: absolute; inset: 0; background: var(--tribu-glow); pointer-events: none; border-radius: var(--radius-lg);"></div>
+          <div style="position: relative; display: flex; flex-direction: column; gap: 8px;">
+            <span class="eyebrow">Nivel vigente</span>
+            <p style="margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 20px; color: var(--fg-1);">Pioneros</p>
+            <p style="margin: 0; font-family: var(--font-display); font-weight: 900; font-size: clamp(34px, 5.6vw, 46px); letter-spacing: -0.03em; color: var(--fg-1);">$400.000</p>
+            <!-- DINÁMICO: actualizar cupos disponibles según avance la venta -->
+            <p style="margin: 0; font-size: 14px; color: var(--fg-2);">4 cupos disponibles</p>
+          </div>
+        </div>
+
+        <!-- Tarjeta Early Bird (nivel futuro) -->
+        <div style="background: var(--bg-1); border: 1px solid var(--border-default); border-radius: var(--radius-lg); padding: 26px; box-shadow: var(--shadow-md); display: flex; flex-direction: column; gap: 8px;">
+          <p style="margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 20px; color: var(--fg-2);">Early Bird</p>
+          <p style="margin: 0; font-family: var(--font-display); font-weight: 900; font-size: clamp(26px, 4vw, 32px); letter-spacing: -0.03em; color: var(--fg-3);">$460.000</p>
+          <p style="margin: 0; font-size: 14px; color: var(--fg-3);">6 cupos</p>
+        </div>
+
+        <!-- Tarjeta General (nivel futuro) -->
+        <div style="background: var(--bg-1); border: 1px solid var(--border-default); border-radius: var(--radius-lg); padding: 26px; box-shadow: var(--shadow-md); display: flex; flex-direction: column; gap: 8px;">
+          <p style="margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 20px; color: var(--fg-2);">General</p>
+          <p style="margin: 0; font-family: var(--font-display); font-weight: 900; font-size: clamp(26px, 4vw, 32px); letter-spacing: -0.03em; color: var(--fg-3);">$540.000</p>
+          <p style="margin: 0; font-size: 14px; color: var(--fg-3);">2 cupos</p>
+        </div>
+
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; padding-top: 4px;">
+        <p style="margin: 0; font-size: 15px; color: var(--fg-4);">
+          Precio de referencia del programa: <s style="color: var(--fg-4);">$600.000 COP</s> — no se vende a este nivel.
+        </p>
+        <a href="#registro" class="btn-primary" style="padding: 14px 26px;">Reserva tu cupo</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════
+       10 FAQ
+       Acordeón — 6 preguntas.
+       Interactividad: JS inline o componente Astro.
+       ════════════════════════════════════════════ -->
+  <section data-screen-label="10 FAQ" style="padding: clamp(56px, 9vw, 104px) 0; background: var(--bg-1); border-top: 1px solid var(--border-subtle);">
+    <div style="max-width: 760px; margin: 0 auto; padding: 0 20px; display: flex; flex-direction: column; gap: clamp(24px, 4vw, 36px);">
+      <h2 style="font-family: var(--font-display); font-weight: 700; font-size: clamp(26px, 4.6vw, 40px); line-height: 1.15; letter-spacing: -0.02em; margin: 0;">Preguntas frecuentes</h2>
+      <div style="display: flex; flex-direction: column; border-top: 1px solid var(--border-default);">
+
+        <!-- Pregunta 1 -->
+        <div class="faq-item" style="border-bottom: 1px solid var(--border-default);">
+          <div class="faq-trigger" style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 0; cursor: pointer; user-select: none;">
+            <p style="margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(16px, 2.2vw, 19px); color: var(--fg-1);">"No sé nada de tecnología, ¿igual me sirve?"</p>
+            <span class="faq-toggle" style="color: var(--accent-ink); font-size: 20px; line-height: 1;">+</span>
+          </div>
+          <div class="faq-answer">
+            <p style="margin: 0; padding-bottom: 22px; font-size: 15.5px; line-height: 1.65; color: var(--fg-2); max-width: 62ch;">Sí. El curso está diseñado para personas que no programan, y ese es el punto de partida, no una excepción.</p>
+          </div>
+        </div>
+
+        <!-- Pregunta 2 -->
+        <div class="faq-item" style="border-bottom: 1px solid var(--border-default);">
+          <div class="faq-trigger" style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 0; cursor: pointer; user-select: none;">
+            <p style="margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(16px, 2.2vw, 19px); color: var(--fg-1);">"Ya uso ChatGPT de vez en cuando, ¿para qué pagar un curso?"</p>
+            <span class="faq-toggle" style="color: var(--accent-ink); font-size: 20px; line-height: 1;">+</span>
+          </div>
+          <div class="faq-answer">
+            <p style="margin: 0; padding-bottom: 22px; font-size: 15.5px; line-height: 1.65; color: var(--fg-2); max-width: 62ch;">El curso no repite lo que ya sabes, parte de ahí. La diferencia es el proyecto final: se construye sobre tu tarea repetitiva real, no sobre un ejemplo genérico. Lo que cambia no es si usas IA, sino si la IA te está ahorrando horas de verdad.</p>
+          </div>
+        </div>
+
+        <!-- Pregunta 3 -->
+        <div class="faq-item" style="border-bottom: 1px solid var(--border-default);">
+          <div class="faq-trigger" style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 0; cursor: pointer; user-select: none;">
+            <p style="margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(16px, 2.2vw, 19px); color: var(--fg-1);">"No tengo tiempo."</p>
+            <span class="faq-toggle" style="color: var(--accent-ink); font-size: 20px; line-height: 1;">+</span>
+          </div>
+          <div class="faq-answer">
+            <p style="margin: 0; padding-bottom: 22px; font-size: 15.5px; line-height: 1.65; color: var(--fg-2); max-width: 62ch;">Son 12 horas totales, repartidas en 4 sábados de mañana.</p>
+          </div>
+        </div>
+
+        <!-- Pregunta 4 -->
+        <div class="faq-item" style="border-bottom: 1px solid var(--border-default);">
+          <div class="faq-trigger" style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 0; cursor: pointer; user-select: none;">
+            <p style="margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(16px, 2.2vw, 19px); color: var(--fg-1);">"¿Sirve si no soy programador?"</p>
+            <span class="faq-toggle" style="color: var(--accent-ink); font-size: 20px; line-height: 1;">+</span>
+          </div>
+          <div class="faq-answer">
+            <p style="margin: 0; padding-bottom: 22px; font-size: 15.5px; line-height: 1.65; color: var(--fg-2); max-width: 62ch;">Sí. El enfoque es criterio y flujo de trabajo, no código.</p>
+          </div>
+        </div>
+
+        <!-- Pregunta 5 -->
+        <div class="faq-item" style="border-bottom: 1px solid var(--border-default);">
+          <div class="faq-trigger" style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 0; cursor: pointer; user-select: none;">
+            <p style="margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(16px, 2.2vw, 19px); color: var(--fg-1);">"¿Qué necesito llevar?"</p>
+            <span class="faq-toggle" style="color: var(--accent-ink); font-size: 20px; line-height: 1;">+</span>
+          </div>
+          <div class="faq-answer">
+            <p style="margin: 0; padding-bottom: 22px; font-size: 15.5px; line-height: 1.65; color: var(--fg-2); max-width: 62ch;">Computador portátil, nada más.</p>
+          </div>
+        </div>
+
+        <!-- Pregunta 6 -->
+        <div class="faq-item" style="border-bottom: 1px solid var(--border-default);">
+          <div class="faq-trigger" style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 0; cursor: pointer; user-select: none;">
+            <p style="margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(16px, 2.2vw, 19px); color: var(--fg-1);">"¿Cómo pago?"</p>
+            <span class="faq-toggle" style="color: var(--accent-ink); font-size: 20px; line-height: 1;">+</span>
+          </div>
+          <div class="faq-answer">
+            <p style="margin: 0; padding-bottom: 22px; font-size: 15.5px; line-height: 1.65; color: var(--fg-2); max-width: 62ch;">BreB, Bold o efectivo, una vez confirmado el registro.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ: acordeón JS mínimo -->
+  <script>
+    document.querySelectorAll('.faq-trigger').forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        const item = trigger.closest('.faq-item');
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item.open').forEach(i => {
+          i.classList.remove('open');
+          i.querySelector('.faq-toggle').textContent = '+';
+        });
+        if (!isOpen) {
+          item.classList.add('open');
+          trigger.querySelector('.faq-toggle').textContent = '−';
+        }
+      });
+    });
+  </script>
+
+
+  <!-- ════════════════════════════════════════════
+       11 REGISTRO
+       id="registro" — destino de todos los CTAs de la página.
+       Formulario propio → POST a Brevo API (no form nativo).
+       Al submit: estado "pendiente_por_pagar" + secuencia de 5 correos.
+       ════════════════════════════════════════════ -->
+  <section id="registro" data-screen-label="11 Registro" style="scroll-margin-top: 64px; position: relative; padding: clamp(64px, 10vw, 120px) 0 clamp(72px, 11vw, 128px); background: var(--bg-3); border-top: 1px solid var(--border-subtle);">
+    <div style="position: absolute; inset: 0; background: var(--tribu-glow); pointer-events: none;"></div>
+    <div style="position: relative; max-width: 1080px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: clamp(32px, 5vw, 56px); align-items: center;">
+
+      <!-- Copy de cierre -->
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <h2 style="font-family: var(--font-display); font-weight: 900; font-size: clamp(30px, 5.4vw, 48px); line-height: 1.08; letter-spacing: -0.025em; margin: 0;">
+          Empezamos el 19 de septiembre.
+        </h2>
+        <!-- DINÁMICO: actualizar según cupos disponibles -->
+        <p style="margin: 0; font-size: clamp(16px, 2.4vw, 19px); line-height: 1.55; color: var(--fg-2);">
+          Quedan 4 cupos Pioneros a $400.000.
+        </p>
+        <p style="margin: 0; font-size: 14px; color: var(--fg-3);">
+          Te escribimos por WhatsApp para confirmar el pago (BreB, Bold o efectivo).
+        </p>
+      </div>
+
+      <!-- Formulario -->
+      <!--
+        IMPLEMENTACIÓN EN ASTRO:
+        - Este form hace POST a la Brevo API (POST /v3/contacts)
+        - API key en variable de entorno: BREVO_API_KEY
+        - Al submit exitoso: mostrar estado de confirmación (animar con tribuRise)
+        - Campos: nombre, email, telefono, profesion
+        - Crear contacto con atributo de lista "pendiente_por_pagar"
+      -->
+      <div style="background: var(--bg-0); border: 1px solid var(--border-default); border-radius: var(--radius-xl); padding: clamp(22px, 3.5vw, 32px); box-shadow: var(--shadow-lg);">
+        <form id="form-registro" style="display: flex; flex-direction: column; gap: 14px;">
+          <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: var(--fg-2);">
+            Nombre completo
+            <input type="text" name="nombre" required style="width: 100%; box-sizing: border-box; background: var(--bg-2); border: 1px solid var(--border-default); border-radius: var(--radius-md); padding: 13px 14px; font-size: 16px; color: var(--fg-1); outline: none;">
+          </label>
+          <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: var(--fg-2);">
+            Email
+            <input type="email" name="email" required style="width: 100%; box-sizing: border-box; background: var(--bg-2); border: 1px solid var(--border-default); border-radius: var(--radius-md); padding: 13px 14px; font-size: 16px; color: var(--fg-1); outline: none;">
+          </label>
+          <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: var(--fg-2);">
+            Teléfono / WhatsApp
+            <input type="tel" name="telefono" required style="width: 100%; box-sizing: border-box; background: var(--bg-2); border: 1px solid var(--border-default); border-radius: var(--radius-md); padding: 13px 14px; font-size: 16px; color: var(--fg-1); outline: none;">
+          </label>
+          <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: var(--fg-2);">
+            Profesión
+            <input type="text" name="profesion" required style="width: 100%; box-sizing: border-box; background: var(--bg-2); border: 1px solid var(--border-default); border-radius: var(--radius-md); padding: 13px 14px; font-size: 16px; color: var(--fg-1); outline: none;">
+          </label>
+          <button type="submit" class="btn-primary" style="width: 100%; margin-top: 6px; padding: 16px; font-size: 16px; border-radius: var(--radius-md);">
+            Reservar mi cupo
+          </button>
+        </form>
+
+        <!-- Estado de confirmación (oculto hasta submit exitoso) -->
+        <div id="confirmacion" style="display: none; flex-direction: column; gap: 12px; padding: 12px 0; animation: tribuRise .4s cubic-bezier(.16,1,.3,1) both;">
+          <span class="eyebrow">Registro recibido</span>
+          <p style="margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 24px; line-height: 1.2; color: var(--fg-1);" id="saludo-confirmacion">Tu lugar está apartado.</p>
+          <p style="margin: 0; font-size: 15.5px; line-height: 1.6; color: var(--fg-2);">
+            Tu cupo queda apartado como <b style="color: var(--fg-1);">pendiente por pagar</b>. Te escribimos al WhatsApp que registraste con las instrucciones de pago.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- FOOTER -->
+  <footer style="background: var(--bg-0); border-top: 1px solid var(--border-subtle); padding: 28px 20px; text-align: center;">
+    <p style="margin: 0; font-size: 13px; color: var(--fg-4);">
+      Inteligencia Artificial Aplicada al Trabajo Profesional · Cartago, Valle del Cauca · The Tribu
+    </p>
+  </footer>
+
+</div>
+
+</body>
+</html>
