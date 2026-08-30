@@ -1,0 +1,193 @@
+---
+// Sección 11 — Registro
+// id="registro" — destino de todos los CTAs.
+// Form propio → POST a /api/register → Brevo Contacts API.
+
+interface Props {
+  cuposDisponibles?: number;
+}
+
+const { cuposDisponibles = 4 } = Astro.props;
+---
+
+<section id="registro" data-screen-label="11 Registro" class="registro-section">
+  <div class="registro-glow"></div>
+  <div class="registro-grid">
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <h2
+        style="font-family: var(--font-display); font-weight: 900; font-size: clamp(30px, 5.4vw, 48px); line-height: 1.08; letter-spacing: -0.025em; margin: 0;"
+      >
+        Empezamos el 19 de septiembre.
+      </h2>
+      <p style="margin: 0; font-size: clamp(16px, 2.4vw, 19px); line-height: 1.55; color: var(--fg-2);">
+        Quedan {cuposDisponibles} cupos Pioneros a $400.000.
+      </p>
+      <p style="margin: 0; font-size: 14px; color: var(--fg-3);">
+        Te escribimos por WhatsApp para confirmar el pago (BreB, Bold o efectivo).
+      </p>
+    </div>
+
+    <div class="registro-card">
+      <form id="form-registro" style="display: flex; flex-direction: column; gap: 14px;">
+        <label class="form-label">
+          Nombre completo
+          <input type="text" name="nombre" required class="form-input" autocomplete="name" />
+        </label>
+        <label class="form-label">
+          Email
+          <input type="email" name="email" required class="form-input" autocomplete="email" />
+        </label>
+        <label class="form-label">
+          Teléfono / WhatsApp
+          <input type="tel" name="telefono" required class="form-input" autocomplete="tel" inputmode="tel" />
+        </label>
+        <label class="form-label">
+          Profesión
+          <input type="text" name="profesion" required class="form-input" />
+        </label>
+        <button
+          type="submit"
+          class="btn-primary"
+          style="width: 100%; margin-top: 6px; padding: 16px; font-size: 16px; border-radius: var(--radius-md);"
+        >
+          Reservar mi cupo
+        </button>
+        <p id="form-error" class="form-error" hidden></p>
+      </form>
+
+      <div id="confirmacion" class="confirmacion" hidden>
+        <span class="eyebrow">Registro recibido</span>
+        <p id="saludo-confirmacion" class="confirmacion-title">Tu lugar está apartado.</p>
+        <p style="margin: 0; font-size: 15.5px; line-height: 1.6; color: var(--fg-2);">
+          Tu cupo queda apartado como <b style="color: var(--fg-1);">pendiente por pagar</b>. Te
+          escribimos al WhatsApp que registraste con las instrucciones de pago.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById("form-registro") as HTMLFormElement | null;
+  const confirmacion = document.getElementById("confirmacion");
+  const saludoEl = document.getElementById("saludo-confirmacion");
+  const errorEl = document.getElementById("form-error");
+  const btn = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!btn) return;
+
+    errorEl?.setAttribute("hidden", "");
+    btn.disabled = true;
+    const originalLabel = btn.textContent;
+    btn.textContent = "Enviando…";
+
+    const data = new FormData(form);
+    const payload = {
+      nombre: data.get("nombre") as string,
+      email: data.get("email") as string,
+      telefono: data.get("telefono") as string,
+      profesion: data.get("profesion") as string,
+    };
+
+    try {
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({ error: "Error desconocido" }));
+        throw new Error(body.error || "No pudimos guardar tu registro");
+      }
+
+      // Analytics event
+      if (typeof window.gtag === "function") {
+        window.gtag("event", "form_submit", { form_id: "registro_cohorte_3" });
+      }
+      if (typeof window.fbq === "function") {
+        window.fbq("track", "Lead");
+      }
+
+      const firstName = payload.nombre.split(" ")[0];
+      if (saludoEl) saludoEl.textContent = `${firstName}, tu lugar está apartado.`;
+      form.setAttribute("hidden", "");
+      confirmacion?.removeAttribute("hidden");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Error al enviar";
+      if (errorEl) {
+        errorEl.textContent = message;
+        errorEl.removeAttribute("hidden");
+      }
+      btn.disabled = false;
+      btn.textContent = originalLabel;
+    }
+  });
+</script>
+
+<style>
+  .registro-section {
+    scroll-margin-top: 64px;
+    position: relative;
+    padding: clamp(64px, 10vw, 120px) 0 clamp(72px, 11vw, 128px);
+    background: var(--bg-3);
+    border-top: 1px solid var(--border-subtle);
+  }
+  .registro-glow {
+    position: absolute;
+    inset: 0;
+    background: var(--tribu-glow);
+    pointer-events: none;
+  }
+  .registro-grid {
+    position: relative;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: clamp(32px, 5vw, 56px);
+    align-items: center;
+  }
+  .registro-card {
+    background: var(--bg-0);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-xl);
+    padding: clamp(22px, 3.5vw, 32px);
+    box-shadow: var(--shadow-lg);
+  }
+  .form-label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--fg-2);
+  }
+  .form-error {
+    margin: 0;
+    padding: 10px 14px;
+    background: rgba(248, 113, 113, 0.08);
+    border: 1px solid rgba(248, 113, 113, 0.3);
+    border-radius: var(--radius-sm);
+    color: var(--danger);
+    font-size: 13px;
+  }
+  .confirmacion {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 0;
+    animation: tribuRise 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .confirmacion-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1.2;
+    color: var(--fg-1);
+  }
+</style>

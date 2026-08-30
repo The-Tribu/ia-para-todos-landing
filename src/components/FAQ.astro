@@ -1,0 +1,141 @@
+---
+// Sección 10 — FAQ (acordeón)
+// JS mínimo para toggle. Solo una pregunta abierta a la vez.
+
+const questions = [
+  {
+    q: '"No sé nada de tecnología, ¿igual me sirve?"',
+    a: "Sí. El curso está diseñado para personas que no programan, y ese es el punto de partida, no una excepción.",
+  },
+  {
+    q: '"Ya uso ChatGPT de vez en cuando, ¿para qué pagar un curso?"',
+    a: "El curso no repite lo que ya sabes, parte de ahí. La diferencia es el proyecto final: se construye sobre tu tarea repetitiva real, no sobre un ejemplo genérico. Lo que cambia no es si usas IA, sino si la IA te está ahorrando horas de verdad.",
+  },
+  {
+    q: '"No tengo tiempo."',
+    a: "Son 12 horas totales, repartidas en 4 sábados de mañana.",
+  },
+  {
+    q: '"¿Sirve si no soy programador?"',
+    a: "Sí. El enfoque es criterio y flujo de trabajo, no código.",
+  },
+  {
+    q: '"¿Qué necesito llevar?"',
+    a: "Computador portátil, nada más.",
+  },
+  {
+    q: '"¿Cómo pago?"',
+    a: "BreB, Bold o efectivo, una vez confirmado el registro.",
+  },
+];
+---
+
+<section
+  data-screen-label="10 FAQ"
+  style="padding: clamp(56px, 9vw, 104px) 0; background: var(--bg-1); border-top: 1px solid var(--border-subtle);"
+>
+  <div
+    style="max-width: 760px; margin: 0 auto; padding: 0 20px; display: flex; flex-direction: column; gap: clamp(24px, 4vw, 36px);"
+  >
+    <h2
+      style="font-family: var(--font-display); font-weight: 700; font-size: clamp(26px, 4.6vw, 40px); line-height: 1.15; letter-spacing: -0.02em; margin: 0;"
+    >
+      Preguntas frecuentes
+    </h2>
+    <div style="display: flex; flex-direction: column; border-top: 1px solid var(--border-default);">
+      {
+        questions.map((item) => (
+          <div class="faq-item">
+            <button type="button" class="faq-trigger" aria-expanded="false">
+              <span class="faq-question">{item.q}</span>
+              <span class="faq-toggle" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>{item.a}</p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>(".faq-trigger").forEach((trigger) => {
+    trigger.addEventListener("click", () => {
+      const item = trigger.closest(".faq-item");
+      if (!item) return;
+      const isOpen = item.classList.contains("open");
+
+      document.querySelectorAll(".faq-item.open").forEach((i) => {
+        i.classList.remove("open");
+        const t = i.querySelector<HTMLButtonElement>(".faq-trigger");
+        const tog = i.querySelector<HTMLSpanElement>(".faq-toggle");
+        t?.setAttribute("aria-expanded", "false");
+        if (tog) tog.textContent = "+";
+      });
+
+      if (!isOpen) {
+        item.classList.add("open");
+        trigger.setAttribute("aria-expanded", "true");
+        const tog = item.querySelector<HTMLSpanElement>(".faq-toggle");
+        if (tog) tog.textContent = "−";
+      }
+    });
+  });
+</script>
+
+<style>
+  .faq-item {
+    border-bottom: 1px solid var(--border-default);
+  }
+  .faq-trigger {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 0;
+    cursor: pointer;
+    user-select: none;
+    width: 100%;
+  }
+  .faq-trigger:focus-visible {
+    outline: 2px solid var(--accent-ink);
+    outline-offset: 4px;
+    border-radius: var(--radius-sm);
+  }
+  .faq-question {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(16px, 2.2vw, 19px);
+    color: var(--fg-1);
+    text-align: left;
+  }
+  .faq-toggle {
+    color: var(--accent-ink);
+    font-size: 20px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .faq-answer {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition:
+      max-height 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.25s;
+  }
+  .faq-answer p {
+    margin: 0;
+    padding-bottom: 22px;
+    font-size: 15.5px;
+    line-height: 1.65;
+    color: var(--fg-2);
+    max-width: 62ch;
+  }
+  .faq-item.open .faq-answer {
+    max-height: 400px;
+    opacity: 1;
+  }
+</style>

@@ -1,0 +1,149 @@
+---
+// Sección 06 — Qué incluye
+// Lista vertical con ícono + título + detalle.
+// Íconos Lucide (stroke 1.75px, 22px, currentColor).
+
+interface Item {
+  title: string;
+  detail: string;
+  icon: string; // Lucide icon name
+  featured?: boolean;
+  eyebrow?: string;
+}
+
+const items: Item[] = [
+  {
+    title: "Formación práctica",
+    detail: "12 horas · 4 sábados · 9:00 AM – 12:00 PM",
+    icon: "calendar",
+  },
+  {
+    title: "Claude Pro",
+    detail: "Acceso durante todo el programa (~$86.000 COP de valor)",
+    icon: "key-round",
+  },
+  {
+    title: "Proyecto final",
+    detail: "Personalizado a la profesión del estudiante",
+    icon: "wrench",
+    featured: true,
+    eyebrow: "el diferenciador",
+  },
+  {
+    title: "Certificado",
+    detail: "Certificado virtual — <i>Inteligencia Artificial Aplicada al Trabajo Profesional</i> · apto para LinkedIn",
+    icon: "award",
+  },
+  {
+    title: "Comunidad",
+    detail: "Grupo privado de WhatsApp con acceso directo al instructor",
+    icon: "users",
+  },
+  {
+    title: "Recursos",
+    detail: "Materiales y recursos de por vida",
+    icon: "download",
+  },
+];
+
+const icons: Record<string, string> = {
+  calendar: '<rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M8 2v4M16 2v4M3 10h18"></path>',
+  "key-round": '<path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"></path><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>',
+  wrench: '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>',
+  award: '<circle cx="12" cy="8" r="6"></circle><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>',
+  users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path>',
+  download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5M12 15V3"></path>',
+};
+---
+
+<section
+  data-screen-label="06 Qué incluye"
+  style="padding: clamp(56px, 9vw, 104px) 0; background: var(--bg-1); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);"
+>
+  <div
+    style="max-width: 1080px; margin: 0 auto; padding: 0 20px; display: flex; flex-direction: column; gap: clamp(28px, 4vw, 44px);"
+  >
+    <h2
+      style="font-family: var(--font-display); font-weight: 700; font-size: clamp(26px, 4.6vw, 40px); line-height: 1.15; letter-spacing: -0.02em; margin: 0;"
+    >
+      Qué incluye
+    </h2>
+    <div class="includes-list">
+      {
+        items.map((item) => (
+          <div class={`includes-row ${item.featured ? "featured" : ""}`}>
+            <svg
+              viewBox="0 0 24 24"
+              width="22"
+              height="22"
+              fill="none"
+              stroke={item.featured ? "var(--accent-ink)" : "var(--fg-3)"}
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+              style="display: block; margin-top: 2px;"
+              set:html={icons[item.icon]}
+            />
+            <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 24px;">
+              <div style="flex: 0 0 auto; width: 190px; max-width: 100%; display: flex; flex-direction: column; gap: 2px;">
+                <p class={`includes-title ${item.featured ? "featured-title" : ""}`}>
+                  {item.title}
+                </p>
+                {item.eyebrow && (
+                  <span class="eyebrow" style="font-size: 10.5px;">
+                    {item.eyebrow}
+                  </span>
+                )}
+              </div>
+              <p
+                class="includes-detail"
+                style={item.featured ? "font-size: 16.5px; color: var(--fg-1);" : ""}
+                set:html={item.detail}
+              />
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .includes-list {
+    display: flex;
+    flex-direction: column;
+    max-width: 780px;
+    border-top: 1px solid var(--border-default);
+  }
+  .includes-row {
+    display: grid;
+    grid-template-columns: 22px minmax(0, 1fr);
+    gap: 6px 18px;
+    align-items: start;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border-default);
+  }
+  .includes-row.featured {
+    padding: 24px 0;
+  }
+  .includes-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(17px, 2.2vw, 19px);
+    color: var(--fg-1);
+    letter-spacing: -0.01em;
+  }
+  .includes-title.featured-title {
+    font-size: clamp(19px, 2.6vw, 22px);
+  }
+  .includes-detail {
+    margin: 0;
+    flex: 1 1 220px;
+    min-width: 0;
+    font-size: 15.5px;
+    line-height: 1.55;
+    color: var(--fg-2);
+  }
+</style>

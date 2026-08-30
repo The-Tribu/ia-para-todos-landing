@@ -1,0 +1,46 @@
+---
+// Sección 01 — Hero
+// Foto de fondo (salón Cotecnova o cohorte anterior) con overlay degradado.
+// CTA hace scroll suave a #registro.
+---
+
+<section
+  data-screen-label="01 Hero"
+  style="position: relative; min-height: min(88vh, 760px); display: flex; align-items: flex-end; padding: clamp(96px, 18vw, 200px) 0 clamp(48px, 7vw, 88px); overflow: hidden;"
+>
+  <!-- Foto de fondo (placeholder hasta tener imagen real) -->
+  <div style="position: absolute; inset: 0; background: var(--bg-2);">
+    <!-- TODO: reemplazar con <Image src={heroSalon} alt="Salón de Cotecnova" /> cuando tengamos la foto -->
+  </div>
+
+  <!-- Overlay degradado sobre la foto -->
+  <div
+    style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.30) 55%, rgba(255,255,255,0.72) 88%, #ffffff 100%);"
+  >
+  </div>
+  <div style="position: absolute; inset: 0; pointer-events: none; background: var(--tribu-glow);"></div>
+
+  <!-- Contenido -->
+  <div style="position: relative; width: 100%; max-width: 1080px; margin: 0 auto; padding: 0 20px;">
+    <div
+      style="display: flex; flex-direction: column; gap: clamp(20px, 3vw, 28px); max-width: 760px; background: rgba(255,255,255,0.84); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); padding: clamp(24px, 4vw, 40px); box-shadow: var(--shadow-lg);"
+    >
+      <span class="eyebrow">Curso presencial · Cartago, Valle</span>
+      <h1
+        style="font-family: var(--font-display); font-weight: 900; font-size: clamp(38px, 8.2vw, 76px); line-height: 1.03; letter-spacing: -0.025em; margin: 0; color: var(--fg-1); text-wrap: balance;"
+      >
+        La usas. Pero sientes que no le sacas <span class="gradient-text">todo el jugo</span>.
+      </h1>
+      <p
+        style="font-family: var(--font-body); font-size: clamp(16px, 2.4vw, 20px); line-height: 1.55; color: var(--fg-2); margin: 0; max-width: 30ch; font-weight: 500;"
+      >
+        4 sábados presenciales en Cartago · 12 horas · Sin necesitar saber programar
+      </p>
+      <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+        <a href="#registro" class="btn-primary" style="padding: 16px 30px; font-size: 17px;">
+          Reserva tu cupo
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

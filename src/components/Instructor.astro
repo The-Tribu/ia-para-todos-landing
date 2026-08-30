@@ -1,0 +1,65 @@
+---
+// Sección 05 — Quién enseña
+// Foto profesional + bio en 2 párrafos + credenciales.
+// The Tribu aparece solo como dato de trayectoria, no como marca aparte.
+---
+
+<section data-screen-label="05 Quién enseña" style="padding: clamp(64px, 10vw, 120px) 0;">
+  <div
+    style="max-width: 1080px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: clamp(28px, 5vw, 56px); align-items: start;"
+  >
+    <div
+      style="position: relative; width: 100%; aspect-ratio: 4 / 5; max-width: 420px; border-radius: var(--radius-xl); overflow: hidden; border: 1px solid var(--border-default); background: var(--bg-2); display: flex; align-items: center; justify-content: center; color: var(--fg-4); font-size: 13px;"
+    >
+      <!-- TODO: <Image src={jorgeFoto} alt="Jorge Olarte" /> -->
+      [Foto profesional de Jorge Olarte]
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 22px;">
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <span class="eyebrow">Quién enseña</span>
+        <h2
+          style="font-family: var(--font-display); font-weight: 700; font-size: clamp(26px, 4.6vw, 40px); line-height: 1.15; letter-spacing: -0.02em; margin: 0;"
+        >
+          Jorge Olarte
+        </h2>
+      </div>
+      <p
+        style="margin: 0; font-size: clamp(15px, 2vw, 17px); line-height: 1.65; color: var(--fg-2); text-wrap: pretty;"
+      >
+        Estudié esto formalmente, antes de que fuera tendencia. Máster en Ingeniería de Software
+        y especialización en ingeniería de IA — cuando explico por qué la IA alucina o qué es un
+        token, no lo digo de oídas.
+      </p>
+      <p
+        style="margin: 0; font-size: clamp(15px, 2vw, 17px); line-height: 1.65; color: var(--fg-2); text-wrap: pretty;"
+      >
+        Pero lo que hace que este curso funcione no es eso. Es que llevo años enseñándole a
+        profesionales no técnicos: sé qué omitir, cómo traducir lo complejo a lo que de verdad
+        importa, y cómo lograr que un abogado, un contador o un diseñador salga con algo que
+        pueda usar el lunes.
+      </p>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; padding-top: 4px;">
+        <span class="credential">Máster en Ingeniería de Software · U. Pontificia de Salamanca</span
+        >
+        <span class="credential">AI Engineering Specialization · ByteByteGo, 2026</span>
+        <span class="credential">Fundador de The Tribu</span>
+      </div>
+      <p style="margin: 0; font-size: 13px; line-height: 1.6; color: var(--fg-4);">
+        Publica semanalmente en el podcast y el newsletter de The Tribu sobre IA aplicada al
+        trabajo.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .credential {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--fg-3);
+    background: var(--bg-2);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-pill);
+    padding: 6px 12px;
+  }
+</style>

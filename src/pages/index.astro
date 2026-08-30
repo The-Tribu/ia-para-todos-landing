@@ -1,0 +1,33 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
+import SocialProof from "../components/SocialProof.astro";
+import CycleDiagram from "../components/CycleDiagram.astro";
+import Transformation from "../components/Transformation.astro";
+import Instructor from "../components/Instructor.astro";
+import Includes from "../components/Includes.astro";
+import Testimonial from "../components/Testimonial.astro";
+import Logistics from "../components/Logistics.astro";
+import Pricing from "../components/Pricing.astro";
+import FAQ from "../components/FAQ.astro";
+import Registration from "../components/Registration.astro";
+import Footer from "../components/Footer.astro";
+
+// Cupos actuales (actualizar manualmente según avance la venta)
+const cuposDisponibles = 4;
+---
+
+<Layout>
+  <Hero />
+  <SocialProof />
+  <CycleDiagram />
+  <Transformation />
+  <Instructor />
+  <Includes />
+  <Testimonial />
+  <Logistics />
+  <Pricing cuposDisponibles={cuposDisponibles} />
+  <FAQ />
+  <Registration cuposDisponibles={cuposDisponibles} />
+  <Footer />
+</Layout>

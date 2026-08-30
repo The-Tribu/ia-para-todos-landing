@@ -1,0 +1,272 @@
+/* ============================================================
+   THE TRIBU — Design System (adaptado para Astro)
+   Fuente original: colors_and_type.css del proyecto Claude Design
+   fb04ebcf-4ded-4587-97c6-bf878063928e
+
+   Adaptaciones:
+   - Satoshi: cargado desde Fontshare CDN (Indian Type Foundry — hosting oficial gratis)
+   - Inter: importado como paquete npm en Layout.astro (@fontsource-variable/inter)
+   - JetBrains Mono: mantenido desde Fontsource CDN
+   ============================================================ */
+
+/* Satoshi desde Fontshare (todos los pesos + itálicas) */
+@import url("https://api.fontshare.com/v2/css?f[]=satoshi@1,2&display=swap");
+
+/* JetBrains Mono (mono) */
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("https://cdn.jsdelivr.net/fontsource/fonts/jetbrains-mono@latest/latin-400-normal.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("https://cdn.jsdelivr.net/fontsource/fonts/jetbrains-mono@latest/latin-600-normal.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* ---------- BRAND CORE ---------- */
+  --tribu-bg: #020617;
+  --tribu-accent: #c621e5;
+  --tribu-violet: #720cd4;
+  --tribu-header: #1e1b4b;
+
+  /* ---------- SURFACES (dark-first) ---------- */
+  --bg-0: #020617;
+  --bg-1: #0a0f24;
+  --bg-2: #11173a;
+  --bg-3: #1e1b4b;
+  --bg-inset: #050a1c;
+
+  /* ---------- BORDERS / LINES ---------- */
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --border-accent: rgba(198, 33, 229, 0.45);
+
+  /* ---------- FOREGROUND / TEXT ---------- */
+  --fg-1: #f5f6fb;
+  --fg-2: #b8bdd6;
+  --fg-3: #7b819e;
+  --fg-4: #4b5072;
+  --fg-on-accent: #ffffff;
+
+  /* ---------- ACCENT SCALE (magenta) ---------- */
+  --accent-50: #fbe9fd;
+  --accent-100: #f5c8fa;
+  --accent-200: #ec98f3;
+  --accent-300: #e066ea;
+  --accent-400: #d33fe1;
+  --accent-500: #c621e5;
+  --accent-600: #a516c4;
+  --accent-700: #7f10a0;
+  --accent-800: #5a0c73;
+  --accent-900: #3a0a4a;
+
+  /* ---------- VIOLET SCALE ---------- */
+  --violet-400: #9a44e8;
+  --violet-500: #720cd4;
+  --violet-600: #5c0aab;
+  --violet-700: #460882;
+
+  /* ---------- SIGNATURE GRADIENT ---------- */
+  --tribu-gradient: linear-gradient(135deg, #720cd4 0%, #c621e5 100%);
+  --tribu-gradient-h: linear-gradient(90deg, #720cd4 0%, #c621e5 100%);
+  --tribu-glow: radial-gradient(60% 60% at 50% 0%, rgba(198, 33, 229, 0.22) 0%, rgba(2, 6, 23, 0) 70%);
+
+  /* ---------- SEMANTIC STATUS ---------- */
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --info: #60a5fa;
+
+  color-scheme: dark;
+
+  /* ---------- TYPE FAMILIES ---------- */
+  --font-display: "Satoshi", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Inter Variable", "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* ---------- TYPE SCALE (1.250 major-third) ---------- */
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-md: 18px;
+  --text-lg: 22px;
+  --text-xl: 28px;
+  --text-2xl: 36px;
+  --text-3xl: 46px;
+  --text-4xl: 58px;
+  --text-5xl: 76px;
+
+  --leading-tight: 1.08;
+  --leading-snug: 1.25;
+  --leading-normal: 1.55;
+  --tracking-tight: -0.02em;
+  --tracking-wide: 0.08em;
+  --tracking-caps: 0.16em;
+
+  /* ---------- RADII ---------- */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 26px;
+  --radius-pill: 999px;
+
+  /* ---------- SPACING (4px base) ---------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --space-10: 128px;
+
+  /* ---------- SHADOWS / ELEVATION ---------- */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 24px 64px rgba(0, 0, 0, 0.55);
+  --shadow-accent: 0 10px 40px -8px rgba(198, 33, 229, 0.5);
+  --ring-accent: 0 0 0 3px rgba(198, 33, 229, 0.35);
+}
+
+/* ============================================================
+   SEMANTIC ELEMENT STYLES
+   ============================================================ */
+.tribu,
+.tribu-scope {
+  background: var(--bg-0);
+  color: var(--fg-1);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+}
+
+.tribu h1,
+.h1 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: var(--text-4xl);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg-1);
+}
+.tribu h2,
+.h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-2xl);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg-1);
+}
+.tribu h3,
+.h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-xl);
+  line-height: var(--leading-snug);
+  color: var(--fg-1);
+}
+.tribu h4,
+.h4 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--text-lg);
+  color: var(--fg-1);
+}
+.tribu p,
+.p {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--fg-2);
+}
+.lead {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: var(--text-md);
+  line-height: 1.6;
+  color: var(--fg-2);
+}
+.eyebrow {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--accent-400);
+}
+.caption {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--fg-3);
+}
+code,
+.code,
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+}
+.gradient-text {
+  background: var(--tribu-gradient-h);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ============================================================
+   LIGHT MODE
+   ============================================================ */
+[data-theme="light"],
+.tribu-light {
+  color-scheme: light;
+
+  --bg-0: #ffffff;
+  --bg-1: #f7f8fc;
+  --bg-2: #eef0f8;
+  --bg-3: #e7e6f6;
+  --bg-inset: #f1f2f9;
+
+  --border-subtle: rgba(15, 18, 48, 0.07);
+  --border-default: rgba(15, 18, 48, 0.12);
+  --border-strong: rgba(15, 18, 48, 0.22);
+  --border-accent: rgba(165, 22, 196, 0.42);
+
+  --fg-1: #12132e;
+  --fg-2: #454a6e;
+  --fg-3: #6c7192;
+  --fg-4: #a2a6c0;
+  --fg-on-accent: #ffffff;
+
+  --accent-ink: #9d13bd;
+
+  --tribu-glow: radial-gradient(60% 60% at 50% 0%, rgba(198, 33, 229, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+
+  --shadow-sm: 0 1px 2px rgba(20, 22, 54, 0.06);
+  --shadow-md: 0 10px 30px -8px rgba(20, 22, 54, 0.14);
+  --shadow-lg: 0 24px 64px -12px rgba(20, 22, 54, 0.2);
+  --shadow-accent: 0 12px 36px -10px rgba(198, 33, 229, 0.4);
+  --ring-accent: 0 0 0 3px rgba(198, 33, 229, 0.28);
+}
+
+[data-theme="light"] .eyebrow,
+.tribu-light .eyebrow {
+  color: var(--accent-ink);
+}
+[data-theme="light"] .gradient-text,
+.tribu-light .gradient-text {
+  background: var(--tribu-gradient-h);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

@@ -1,0 +1,63 @@
+---
+// Sección 08 — Logística
+// Mapa/ubicación + datos duros: fechas, dirección, qué llevar.
+// TODO: embed de Google Maps o captura estática.
+---
+
+<section
+  data-screen-label="08 Logística"
+  style="padding: clamp(56px, 9vw, 104px) 0; background: var(--bg-1); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);"
+>
+  <div
+    style="max-width: 1080px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: clamp(24px, 4vw, 44px); align-items: stretch;"
+  >
+    <div
+      style="position: relative; width: 100%; min-height: 300px; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-default); background: var(--bg-2); display: flex; align-items: center; justify-content: center; color: var(--fg-4); font-size: 13px; text-align: center; padding: 20px;"
+    >
+      [Mapa · Cotecnova, Cra. 4 #7-25, Cartago]
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 22px;">
+      <h2
+        style="font-family: var(--font-display); font-weight: 700; font-size: clamp(26px, 4.6vw, 40px); line-height: 1.15; letter-spacing: -0.02em; margin: 0;"
+      >
+        Dónde y cuándo
+      </h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+        <span class="tag">Sáb 19 sep</span>
+        <span class="tag">Sáb 26 sep</span>
+        <span class="tag">Sáb 3 oct</span>
+        <span class="tag">Sáb 10 oct</span>
+        <span class="tag">9:00 AM – 12:00 PM</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; flex-direction: column; gap: 3px;">
+          <span class="logistics-label">Dirección</span>
+          <p style="margin: 0; font-size: 16px; line-height: 1.5; color: var(--fg-1);">
+            Cotecnova — Cra. 4 #7-25, Cartago, Valle del Cauca
+          </p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 3px;">
+          <span class="logistics-label">Qué llevar</span>
+          <p style="margin: 0; font-size: 16px; line-height: 1.5; color: var(--fg-2);">
+            Computador portátil — es requisito para los ejercicios prácticos.
+          </p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 3px;">
+          <span class="logistics-label">Cómo llegar</span>
+          <p style="margin: 0; font-size: 16px; line-height: 1.5; color: var(--fg-2);">
+            A dos cuadras del parque principal. Parqueadero público sobre la Cra. 4.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .logistics-label {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--fg-4);
+  }
+</style>

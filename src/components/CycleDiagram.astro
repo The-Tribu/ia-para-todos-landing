@@ -1,0 +1,213 @@
+---
+// Sección 03 — El ciclo (diagrama circular)
+// Desktop (≥700px): diagrama circular SVG con animación de aparición
+// Mobile (<700px): chips lineales
+// Transición emocional — sin botones, sin CTA.
+---
+
+<section data-screen-label="03 El ciclo" style="padding: clamp(72px, 12vw, 140px) 0;">
+  <div
+    style="max-width: 900px; margin: 0 auto; padding: 0 20px; display: flex; flex-direction: column; align-items: center; gap: clamp(32px, 5vw, 52px); text-align: center;"
+  >
+    <!-- DESKTOP: diagrama circular SVG -->
+    <div class="ciclo-amplio" style="position: relative; width: min(100%, 560px); aspect-ratio: 1;">
+      <svg
+        viewBox="0 0 400 400"
+        aria-hidden="true"
+        style="position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible;"
+      >
+        <path
+          d="M 234 6.9 A 196 196 0 0 1 393 166"
+          fill="none"
+          stroke="var(--fg-1)"
+          stroke-opacity="0.16"
+          stroke-width="1.5"></path>
+        <path
+          d="M 393 234 A 196 196 0 0 1 234 393"
+          fill="none"
+          stroke="var(--fg-1)"
+          stroke-opacity="0.16"
+          stroke-width="1.5"></path>
+        <path
+          d="M 166 393 A 196 196 0 0 1 7 234"
+          fill="none"
+          stroke="var(--fg-1)"
+          stroke-opacity="0.16"
+          stroke-width="1.5"></path>
+        <path
+          d="M 7 166 A 196 196 0 0 1 166 6.9"
+          fill="none"
+          stroke="var(--accent-ink)"
+          stroke-opacity="0.55"
+          stroke-width="1.5"
+          stroke-dasharray="5 7"></path>
+        <polygon
+          points="0,-5.5 11,0 0,5.5"
+          fill="var(--fg-1)"
+          fill-opacity="0.32"
+          transform="translate(339 61) rotate(45)"></polygon>
+        <polygon
+          points="0,-5.5 11,0 0,5.5"
+          fill="var(--fg-1)"
+          fill-opacity="0.32"
+          transform="translate(339 339) rotate(135)"></polygon>
+        <polygon
+          points="0,-5.5 11,0 0,5.5"
+          fill="var(--fg-1)"
+          fill-opacity="0.32"
+          transform="translate(61 339) rotate(225)"></polygon>
+        <polygon
+          points="0,-5.5 11,0 0,5.5"
+          fill="var(--accent-ink)"
+          transform="translate(108 32.7) rotate(330)"></polygon>
+      </svg>
+      <span data-anim class="cycle-node cycle-node-top">Abres el chat</span>
+      <span data-anim class="cycle-node cycle-node-right">Preguntas</span>
+      <span data-anim class="cycle-node cycle-node-bottom">Copias</span>
+      <span data-anim class="cycle-node cycle-node-left">Pegas</span>
+      <span data-anim class="cycle-loop-label">mañana, otra vez</span>
+      <p class="cycle-center">Nadie te enseñó a exigirle más de una respuesta suelta.</p>
+    </div>
+
+    <p
+      style="margin: 0; max-width: 46ch; font-size: clamp(14px, 1.8vw, 16.5px); line-height: 1.6; color: var(--fg-3); text-wrap: pretty;"
+    >
+      Otros, en tu mismo trabajo y con la misma herramienta, ya lo automatizaron.
+    </p>
+
+    <!-- MOBILE: chips lineales (activo solo en <700px vía CSS) -->
+    <div class="ciclo-compacto">
+      <div
+        style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px;"
+      >
+        <span class="cycle-chip">Abres el chat</span>
+        <span style="color: var(--fg-4);">→</span>
+        <span class="cycle-chip">Preguntas</span>
+        <span style="color: var(--fg-4);">→</span>
+        <span class="cycle-chip">Copias</span>
+        <span style="color: var(--fg-4);">→</span>
+        <span class="cycle-chip">Pegas</span>
+        <span style="color: var(--accent-ink); font-size: 15px;">↺</span>
+        <span style="font-size: 13px; font-weight: 600; color: var(--accent-ink);">
+          mañana, otra vez
+        </span>
+      </div>
+      <p
+        style="margin: 12px auto 0; max-width: 24ch; font-family: var(--font-display); font-weight: 700; font-size: 19px; line-height: 1.3; letter-spacing: -0.015em; color: var(--fg-1);"
+      >
+        Nadie te enseñó a exigirle más de una respuesta suelta.
+      </p>
+    </div>
+
+    <!-- Cita al pie -->
+    <div
+      style="display: flex; flex-direction: column; align-items: center; gap: 12px; padding-top: clamp(8px, 2vw, 16px); border-top: 1px solid var(--border-subtle); width: min(100%, 620px);"
+    >
+      <p
+        style="margin: 0; font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: clamp(20px, 4vw, 34px); line-height: 1.25; letter-spacing: -0.02em; color: var(--fg-1);"
+      >
+        "La uso, pero no le saco todo el jugo"
+      </p>
+      <span class="caption" style="font-size: 13px; color: var(--fg-3);">
+        la frase que más repiten los profesionales antes de tomar este curso
+      </span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cycle-node {
+    position: absolute;
+    white-space: nowrap;
+    background: var(--bg-0);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-pill);
+    padding: 9px 18px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(14px, 1.6vw, 18px);
+    letter-spacing: -0.01em;
+    color: var(--fg-1);
+    animation: tribuFade 0.5s ease-out both;
+  }
+  .cycle-node-top {
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: 0.05s;
+  }
+  .cycle-node-right {
+    top: 50%;
+    left: 100%;
+    transform: translate(-50%, -50%);
+    animation-delay: 0.22s;
+  }
+  .cycle-node-bottom {
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: 0.39s;
+  }
+  .cycle-node-left {
+    top: 50%;
+    left: 0;
+    transform: translate(-50%, -50%);
+    animation-delay: 0.56s;
+  }
+  .cycle-loop-label {
+    position: absolute;
+    top: 15.5%;
+    left: 15.5%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    white-space: nowrap;
+    background: var(--bg-0);
+    padding: 3px 9px;
+    border-radius: var(--radius-pill);
+    font-size: clamp(12px, 1.3vw, 14px);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--accent-ink);
+    animation: tribuFade 0.5s ease-out 0.73s both;
+  }
+  .cycle-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    width: 54%;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(16px, 2.4vw, 23px);
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+    color: var(--fg-1);
+    text-wrap: pretty;
+  }
+  .cycle-chip {
+    background: var(--bg-0);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-pill);
+    padding: 7px 13px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--fg-1);
+  }
+
+  /* Fallback móvil: mostrar chips en <700px, ocultar diagrama circular */
+  .ciclo-compacto {
+    display: none;
+  }
+  @media (max-width: 699px) {
+    .ciclo-amplio {
+      display: none;
+    }
+    .ciclo-compacto {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+  }
+</style>
