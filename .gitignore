@@ -1,0 +1,15 @@
+# Environment
+.env
+.env.local
+.env.production
+
+# Astro
+dist/
+.astro/
+
+# Dependencies
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
