@@ -30,14 +30,19 @@ export const POST: APIRoute = async ({ request }) => {
     return json({ error: "Faltan campos obligatorios" }, 400);
   }
 
+  const nameParts = nombre.trim().split(/\s+/);
+  const firstName = nameParts[0] ?? "";
+  const lastName = nameParts.slice(1).join(" ");
+
   const brevoBody = {
     email,
     attributes: {
-      NOMBRE: nombre,
+      FIRSTNAME: firstName,
+      LASTNAME: lastName,
       SMS: telefono,
       WHATSAPP: telefono,
       PROFESION: profesion,
-      ESTADO_PAGO: "pendiente_por_pagar",
+      ESTADO_PAGO: 2,
       COHORTE: "cohorte-3",
     },
     listIds: BREVO_LIST_ID > 0 ? [BREVO_LIST_ID] : undefined,
