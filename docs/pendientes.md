@@ -24,6 +24,64 @@ Lista de ítems sin resolver para finalizar la página web antes del deadline (5
 - **Asset:** `public/avatars/felipe-gomez.webp` — 14 KB, 288 × 288 px
 - **Implementado en:** `src/components/Transformation.astro` — `avatar: "/avatars/felipe-gomez.webp"`
 
+### OG Image — thumbnail al compartir por WhatsApp / redes
+- **Problema:** `src/layouts/Layout.astro` tiene `og:title`, `og:description` y `og:type` pero **le falta `og:image`**. Sin este tag, WhatsApp y Facebook no muestran ninguna imagen al compartir el enlace — solo texto.
+- **Qué se necesita:** imagen de 1200 × 630 px (ratio 1.91:1) en JPG o WebP, máx 300 KB
+- **Contenido sugerido:** foto del grupo de la cohorte con el logo de The Tribu y el nombre del curso superpuesto (o simplemente la foto de fondo del hero recortada al ratio)
+- **Dónde colocarla:** `public/og/og-image.jpg`
+- **Cómo implementar:** agregar en `src/layouts/Layout.astro` dentro del `<head>`:
+  ```html
+  <meta property="og:image" content="https://iaparatodos.co/og/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://iaparatodos.co/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  ```
+- **Nota:** la URL debe ser absoluta (no relativa) — WhatsApp no resuelve rutas relativas
+- **Verificación:** [WhatsApp Link Preview Debugger](https://www.facebook.com/sharing/debugger/) o compartir el link en un chat privado
+
+---
+
+## Flujo de correos electrónicos — Brevo
+
+La secuencia completa está definida en `docs/estrategia-marketing.md` pero **no está configurada en Brevo todavía**. Bloquea el lanzamiento porque sin los correos nadie que se registre recibirá confirmación ni seguimiento.
+
+### Atributos de contacto usados en `src/lib/brevo.ts`
+
+| Atributo Brevo | Valores posibles | Qué indica |
+|----------------|-----------------|------------|
+| `COHORTE` | `"cohorte-3"` | A qué cohorte pertenece el registro |
+| `NIVEL` | `"1"` \| `"2"` \| `"3"` | Tier de precio asignado (Pioneros / Early Bird / General) |
+| `ESTADO_PAGO` | `"3"` = pagado | Estado del pago — solo `"3"` libera el cupo en `getTierStatus()` |
+
+### Paso 1 — Atributos de contacto en Brevo (configurar una sola vez)
+Crear los atributos personalizados en **Brevo → Contacts → Settings → Contact attributes**:
+- `COHORTE` — tipo texto
+- `NIVEL` — tipo texto
+- `ESTADO_PAGO` — tipo texto
+- `PROFESION` — tipo texto (lo envía el formulario, campo `profesion`)
+
+### Paso 2 — Lista de contactos
+Crear o confirmar la lista en **Brevo → Contacts → Lists** y anotar su ID numérico → ese ID va en la variable de entorno `BREVO_LIST_ID`.
+
+### Paso 3 — 5 plantillas de correo (crear en Brevo → Email → Templates)
+
+| # | Asunto sugerido | Cuándo se envía | Objetivo |
+|---|-----------------|-----------------|----------|
+| 1 | "{{contact.FIRSTNAME}}, tu cupo está apartado — instrucciones de pago" | Inmediato al registro | Confirmar reserva + datos de pago (BreB 305 266 6114 · Bold · efectivo) |
+| 2 | "Tu cupo sigue aquí, pero el nivel puede subir" | +24 h si `ESTADO_PAGO ≠ 3` | Recordatorio suave con urgencia de tier |
+| 3 | "Quedan X cupos en tu nivel — {{días}} días para el 19 sep" | +48–72 h | Urgencia real con cupos restantes |
+| 4 | "La duda más común antes de inscribirse (y cómo la resolvió alguien igual a ti)" | +4–5 días | Objeción + testimonio de un alumno con perfil similar |
+| 5 | "Última oportunidad — tu cupo se libera mañana" | 48 h antes del cierre de ventas (16 sep) | Último aviso, urgencia máxima |
+
+### Paso 4 — Automatización en Brevo (Automation → Create workflow)
+- **Trigger:** contacto añadido a la lista `BREVO_LIST_ID` con `COHORTE = cohorte-3`
+- **Condición de salida:** `ESTADO_PAGO = 3` (pagó → salir de la secuencia)
+- **Flujo:** enviar correo 1 → esperar 24 h → si no pagó, correo 2 → esperar 48 h → correo 3 → esperar 2–3 días → correo 4 → esperar hasta 48 h antes del 17 sep → correo 5
+
+### Paso 5 — Sender (remitente)
+Verificar o crear el sender en **Brevo → Senders** con el email y nombre desde donde saldrán los correos (ej. `jorge@thetribu.co` · "Jorge — IA para Todos").
+
 ---
 
 ## Variables de entorno (producción)
@@ -53,8 +111,13 @@ Estas claves están en `docs/stack.md` como TBD y bloquean funciones en producci
 - [x] Hero muestra foto real (no fondo sólido)
 - [ ] Tarjeta de Vanessa Colorado tiene foto real (no iniciales)
 - [x] Tarjeta de Felipe Gómez tiene foto real (no iniciales)
+- [ ] OG image creada y `og:image` agregado en `Layout.astro` → link preview correcto en WhatsApp
+- [ ] Atributos de contacto creados en Brevo (`COHORTE`, `NIVEL`, `ESTADO_PAGO`, `PROFESION`)
+- [ ] 5 plantillas de correo creadas en Brevo
+- [ ] Automatización de Brevo configurada y probada (trigger → 5 correos → salida al pagar)
+- [ ] Sender verificado en Brevo
 - [ ] `META_PIXEL_ID` configurado en Vercel → `fbq` se dispara en `PageView` y `Lead`
 - [ ] `BREVO_API_KEY` y `BREVO_LIST_ID` configurados en Vercel → formulario funciona en producción
-- [ ] Flujo completo del formulario probado: submit → confirmación → contacto creado en Brevo
+- [ ] Flujo completo del formulario probado end-to-end: submit → contacto en Brevo → correo 1 llega
 - [ ] Google Analytics activo y recibiendo hits
 - [ ] Vercel preview URL revisada en móvil (< 390 px) y escritorio
