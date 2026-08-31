@@ -6,12 +6,10 @@ Lista de ítems sin resolver para finalizar la página web antes del deadline (5
 
 ## Assets visuales
 
-### Hero — imagen de fondo
-- **Archivo a reemplazar:** `src/components/Hero.astro` línea 26
-- **Qué hay ahora:** fondo sólido `var(--bg-2)` como placeholder
-- **Qué se necesita:** foto real del salón de Cotecnova o foto grupal de una cohorte anterior
-- **Formato sugerido:** JPG/WebP, ≥ 1440 × 960 px, optimizada para web (< 300 KB)
-- **Cómo implementar:** reemplazar el `<div>` placeholder por `<img src="/hero/salon-cotecnova.webp" alt="Salón de Cotecnova" ...>` (o el componente `<Image>` de Astro) dentro del contenedor de fondo en `Hero.astro`
+### ~~Hero — imagen de fondo~~ ✅ Resuelto
+- **Branch:** `feat/hero-background-image` — commit `9d15829`
+- **Asset:** `public/hero/fondo-cohorte.webp` — 187 KB (desde 2.1 MB), 1440 × 1080 px
+- **Implementado en:** `src/components/Hero.astro` — `<img fetchpriority="high">` con `object-fit: cover`
 
 ### Foto de Vanessa Colorado — tarjeta de transformación
 - **Archivo a modificar:** `src/components/Transformation.astro`
@@ -21,13 +19,10 @@ Lista de ítems sin resolver para finalizar la página web antes del deadline (5
 - **Cómo implementar:** cambiar `avatar: null` a `avatar: "/avatars/vanessa-colorado.jpg"` en el objeto `vanessa` del array `cases`
 - **Formato:** JPG o WebP, mínimo 144 × 144 px (se muestra a 72 × 72 px, radio 999px)
 
-### Foto de Felipe Gómez — tarjeta de transformación
-- **Archivo a modificar:** `src/components/Transformation.astro`
-- **Qué hay ahora:** `avatar: null` → se muestra iniciales "FG" como fallback
-- **Qué se necesita:** foto real de Felipe Gómez (distinta al thumbnail del video de testimonio)
-- **Dónde colocarla:** `public/avatars/felipe-gomez.jpg`
-- **Cómo implementar:** cambiar `avatar: null` a `avatar: "/avatars/felipe-gomez.jpg"` en el objeto `felipe` del array `cases`
-- **Nota:** el video de Felipe ya está en `public/testimonials/felipe-testimonio.mp4` con su thumbnail en `public/testimonials/felipe-thumbnail.webp`. La foto del avatar es independiente y va en la sección 04 (Transformación), no en la sección 07 (Testimonio)
+### ~~Foto de Felipe Gómez — tarjeta de transformación~~ ✅ Resuelto
+- **Branch:** `feat/avatar-felipe-gomez`
+- **Asset:** `public/avatars/felipe-gomez.webp` — 14 KB, 288 × 288 px
+- **Implementado en:** `src/components/Transformation.astro` — `avatar: "/avatars/felipe-gomez.webp"`
 
 ---
 
@@ -55,9 +50,9 @@ Estas claves están en `docs/stack.md` como TBD y bloquean funciones en producci
 
 ## Checklist de QA antes del lanzamiento (8 sep 2026)
 
-- [ ] Hero muestra foto real (no fondo sólido)
+- [x] Hero muestra foto real (no fondo sólido)
 - [ ] Tarjeta de Vanessa Colorado tiene foto real (no iniciales)
-- [ ] Tarjeta de Felipe Gómez tiene foto real (no iniciales)
+- [x] Tarjeta de Felipe Gómez tiene foto real (no iniciales)
 - [ ] `META_PIXEL_ID` configurado en Vercel → `fbq` se dispara en `PageView` y `Lead`
 - [ ] `BREVO_API_KEY` y `BREVO_LIST_ID` configurados en Vercel → formulario funciona en producción
 - [ ] Flujo completo del formulario probado: submit → confirmación → contacto creado en Brevo
