@@ -4,10 +4,17 @@
 // Nivel vigente destacado con borde accent + glow.
 
 interface Props {
+  tier?: 1 | 2 | 3 | null;
   cuposDisponibles?: number;
 }
 
-const { cuposDisponibles = 4 } = Astro.props;
+const { tier = 1, cuposDisponibles = 4 } = Astro.props;
+
+const tiers = [
+  { id: 1, nombre: "Pioneros", precio: "$400.000", cuposCap: 4 },
+  { id: 2, nombre: "Early Bird", precio: "$460.000", cuposCap: 6 },
+  { id: 3, nombre: "General", precio: "$540.000", cuposCap: 2 },
+] as const;
 ---
 
 <section data-screen-label="09 Precio" style="padding: clamp(64px, 10vw, 120px) 0;">
@@ -26,47 +33,40 @@ const { cuposDisponibles = 4 } = Astro.props;
       </p>
     </div>
 
+    {tier === null && (
+      <div class="sold-out-banner">
+        <span>Todos los cupos de Cohorte 3 están asignados</span>
+      </div>
+    )}
+
     <div
       style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;"
     >
-      <!-- Pioneros (nivel vigente) -->
-      <div class="price-card price-card-active">
-        <div style="position: absolute; inset: 0; background: var(--tribu-glow); pointer-events: none; border-radius: var(--radius-lg);"></div>
-        <div style="position: relative; display: flex; flex-direction: column; gap: 8px;">
-          <span class="eyebrow">Nivel vigente</span>
-          <p style="margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 20px; color: var(--fg-1);">
-            Pioneros
-          </p>
-          <p style="margin: 0; font-family: var(--font-display); font-weight: 900; font-size: clamp(34px, 5.6vw, 46px); letter-spacing: -0.03em; color: var(--fg-1);">
-            $400.000
-          </p>
-          <p style="margin: 0; font-size: 14px; color: var(--fg-2);">
-            {cuposDisponibles} {cuposDisponibles === 1 ? "cupo disponible" : "cupos disponibles"}
-          </p>
-        </div>
-      </div>
-
-      <!-- Early Bird -->
-      <div class="price-card">
-        <p style="margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 20px; color: var(--fg-2);">
-          Early Bird
-        </p>
-        <p style="margin: 0; font-family: var(--font-display); font-weight: 900; font-size: clamp(26px, 4vw, 32px); letter-spacing: -0.03em; color: var(--fg-3);">
-          $460.000
-        </p>
-        <p style="margin: 0; font-size: 14px; color: var(--fg-3);">6 cupos</p>
-      </div>
-
-      <!-- General -->
-      <div class="price-card">
-        <p style="margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 20px; color: var(--fg-2);">
-          General
-        </p>
-        <p style="margin: 0; font-family: var(--font-display); font-weight: 900; font-size: clamp(26px, 4vw, 32px); letter-spacing: -0.03em; color: var(--fg-3);">
-          $540.000
-        </p>
-        <p style="margin: 0; font-size: 14px; color: var(--fg-3);">2 cupos</p>
-      </div>
+      {tiers.map((t) => {
+        const isActive = tier === t.id;
+        const isSoldOut = tier === null;
+        return (
+          <div class={isActive ? "price-card price-card-active" : isSoldOut ? "price-card price-card-disabled" : "price-card"}>
+            {isActive && (
+              <div style="position: absolute; inset: 0; background: var(--tribu-glow); pointer-events: none; border-radius: var(--radius-lg);"></div>
+            )}
+            <div style={`position: relative; display: flex; flex-direction: column; gap: 8px;`}>
+              {isActive && <span class="eyebrow">Nivel vigente</span>}
+              <p style={`margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 20px; color: ${isActive ? "var(--fg-1)" : isSoldOut ? "var(--fg-4)" : "var(--fg-2)"};`}>
+                {t.nombre}
+              </p>
+              <p style={`margin: 0; font-family: var(--font-display); font-weight: 900; font-size: ${isActive ? "clamp(34px, 5.6vw, 46px)" : "clamp(26px, 4vw, 32px)"}; letter-spacing: -0.03em; color: ${isActive ? "var(--fg-1)" : isSoldOut ? "var(--fg-4)" : "var(--fg-3)"};`}>
+                {t.precio}
+              </p>
+              <p style={`margin: 0; font-size: 14px; color: ${isActive ? "var(--fg-2)" : isSoldOut ? "var(--fg-4)" : "var(--fg-3)"};`}>
+                {isActive
+                  ? `${cuposDisponibles} ${cuposDisponibles === 1 ? "cupo disponible" : "cupos disponibles"}`
+                  : `${t.cuposCap} cupos`}
+              </p>
+            </div>
+          </div>
+        );
+      })}
     </div>
 
     <div
@@ -76,7 +76,9 @@ const { cuposDisponibles = 4 } = Astro.props;
         Precio de referencia del programa: <s style="color: var(--fg-4);">$600.000 COP</s> — no
         se vende a este nivel.
       </p>
-      <a href="#registro" class="btn-primary" style="padding: 14px 26px;" id="pricing-cta">Reserva tu cupo</a>
+      <a href="#registro" class="btn-primary" style="padding: 14px 26px;" id="pricing-cta">
+        {tier !== null ? "Reserva tu cupo" : "Lista de interés Cohorte 4"}
+      </a>
     </div>
   </div>
 </section>
@@ -109,5 +111,20 @@ const { cuposDisponibles = 4 } = Astro.props;
     display: flex;
     flex-direction: column;
     gap: 8px;
+  }
+  .price-card-disabled {
+    opacity: 0.45;
+  }
+  .sold-out-banner {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 18px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--fg-3);
+    width: fit-content;
   }
 </style>

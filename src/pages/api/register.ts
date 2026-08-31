@@ -1,4 +1,5 @@
 import type { APIRoute } from "astro";
+import { getTierStatus } from "../../lib/brevo";
 
 export const prerender = false;
 
@@ -9,7 +10,6 @@ interface RegistrationPayload {
   profesion: string;
 }
 
-// ID de la lista de Brevo para Cohorte 3 (setear en .env)
 const BREVO_LIST_ID = Number.parseInt(import.meta.env.BREVO_LIST_ID ?? "0", 10);
 
 export const POST: APIRoute = async ({ request }) => {
@@ -30,24 +30,34 @@ export const POST: APIRoute = async ({ request }) => {
     return json({ error: "Faltan campos obligatorios" }, 400);
   }
 
+  const { tier } = await getTierStatus(apiKey, BREVO_LIST_ID);
+
   const nameParts = nombre.trim().split(/\s+/);
   const firstName = nameParts[0] ?? "";
   const lastName = nameParts.slice(1).join(" ");
 
-  const brevoBody = {
-    email,
-    attributes: {
-      FIRSTNAME: firstName,
-      LASTNAME: lastName,
-      SMS: telefono,
-      WHATSAPP: telefono,
-      PROFESION: profesion,
-      ESTADO_PAGO: 2,
-      COHORTE: "cohorte-3",
-    },
-    listIds: BREVO_LIST_ID > 0 ? [BREVO_LIST_ID] : undefined,
-    updateEnabled: true,
+  const baseAttributes = {
+    FIRSTNAME: firstName,
+    LASTNAME: lastName,
+    SMS: telefono,
+    WHATSAPP: telefono,
+    PROFESION: profesion,
   };
+
+  const brevoBody =
+    tier !== null
+      ? {
+          email,
+          attributes: { ...baseAttributes, ESTADO_PAGO: 2, COHORTE: "cohorte-3", NIVEL: tier },
+          listIds: BREVO_LIST_ID > 0 ? [BREVO_LIST_ID] : undefined,
+          updateEnabled: true,
+        }
+      : {
+          email,
+          attributes: { ...baseAttributes, ESTADO_PAGO: 1, COHORTE: "cohorte-4" },
+          listIds: BREVO_LIST_ID > 0 ? [BREVO_LIST_ID] : undefined,
+          updateEnabled: true,
+        };
 
   try {
     const res = await fetch("https://api.brevo.com/v3/contacts", {
@@ -66,7 +76,7 @@ export const POST: APIRoute = async ({ request }) => {
       return json({ error: "No pudimos guardar tu registro. Intenta de nuevo." }, 502);
     }
 
-    return json({ ok: true });
+    return json({ ok: true, nivelAsignado: tier });
   } catch (err) {
     console.error("Brevo request failed:", err);
     return json({ error: "Error de conexión. Intenta de nuevo." }, 500);
