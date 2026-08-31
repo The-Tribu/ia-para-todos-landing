@@ -1,7 +1,6 @@
 ---
 // Sección 08 — Logística
 // Mapa/ubicación + datos duros: fechas, dirección, qué llevar.
-// TODO: embed de Google Maps o captura estática.
 ---
 
 <section
@@ -11,11 +10,26 @@
   <div
     style="max-width: 1080px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: clamp(24px, 4vw, 44px); align-items: stretch;"
   >
-    <div
-      style="position: relative; width: 100%; min-height: 300px; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-default); background: var(--bg-2); display: flex; align-items: center; justify-content: center; color: var(--fg-4); font-size: 13px; text-align: center; padding: 20px;"
+    <a
+      href="https://www.google.com/maps/search/Cotecnova,+Cra.+4+%237-25,+Cartago,+Valle+del+Cauca,+Colombia"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="map-link"
+      aria-label="Ver Cotecnova en Google Maps"
     >
-      [Mapa · Cotecnova, Cra. 4 #7-25, Cartago]
-    </div>
+      <img
+        src="/assets/mapa-cotecnova.png"
+        alt="Mapa de Cotecnova, Cra. 4 #7-25, Cartago"
+        width="768"
+        height="768"
+        loading="lazy"
+        decoding="async"
+      />
+      <span class="map-overlay">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Abrir en Google Maps
+      </span>
+    </a>
     <div style="display: flex; flex-direction: column; gap: 22px;">
       <h2
         style="font-family: var(--font-display); font-weight: 700; font-size: clamp(26px, 4.6vw, 40px); line-height: 1.15; letter-spacing: -0.02em; margin: 0;"
@@ -59,5 +73,54 @@
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--fg-4);
+  }
+
+  .map-link {
+    position: relative;
+    display: block;
+    width: 100%;
+    min-height: 300px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border-default);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .map-link img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  .map-link:hover img {
+    transform: scale(1.03);
+  }
+
+  .map-overlay {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.72);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+  }
+
+  .map-link:hover .map-overlay {
+    opacity: 1;
   }
 </style>
