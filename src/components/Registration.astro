@@ -4,10 +4,19 @@
 // Form propio → POST a /api/register → Brevo Contacts API.
 
 interface Props {
+  tier?: 1 | 2 | 3 | null;
   cuposDisponibles?: number;
 }
 
-const { cuposDisponibles = 4 } = Astro.props;
+const { tier = 1, cuposDisponibles = 4 } = Astro.props;
+
+const tierInfo = {
+  1: { label: "Pioneros", precio: "$400.000" },
+  2: { label: "Early Bird", precio: "$460.000" },
+  3: { label: "General", precio: "$540.000" },
+} as const;
+
+const activeTier = tier !== null ? tierInfo[tier] : null;
 ---
 
 <section id="registro" data-screen-label="11 Registro" class="registro-section">
@@ -17,13 +26,17 @@ const { cuposDisponibles = 4 } = Astro.props;
       <h2
         style="font-family: var(--font-display); font-weight: 900; font-size: clamp(30px, 5.4vw, 48px); line-height: 1.08; letter-spacing: -0.025em; margin: 0;"
       >
-        Empezamos el 19 de septiembre.
+        {tier !== null ? "Empezamos el 19 de septiembre." : "Los cupos de Cohorte 3 están completos."}
       </h2>
       <p style="margin: 0; font-size: clamp(16px, 2.4vw, 19px); line-height: 1.55; color: var(--fg-2);">
-        Quedan {cuposDisponibles} cupos Pioneros a $400.000.
+        {activeTier
+          ? `Quedan ${cuposDisponibles} ${cuposDisponibles === 1 ? "cupo" : "cupos"} ${activeTier.label} a ${activeTier.precio}.`
+          : "Déjanos tus datos y serás el primero en conocer la apertura de Cohorte 4."}
       </p>
       <p style="margin: 0; font-size: 14px; color: var(--fg-3);">
-        Te escribimos por WhatsApp para confirmar el pago (BreB, Bold o efectivo).
+        {tier !== null
+          ? "Te escribimos por WhatsApp para confirmar el pago (BreB, Bold o efectivo)."
+          : "Sin compromiso. Solo para avisarte cuando abramos inscripciones."}
       </p>
     </div>
 
@@ -59,17 +72,28 @@ const { cuposDisponibles = 4 } = Astro.props;
           class="btn-primary"
           style="width: 100%; margin-top: 6px; padding: 16px; font-size: 16px; border-radius: var(--radius-md);"
         >
-          Reservar mi cupo
+          {tier !== null ? "Reservar mi cupo" : "Quiero que me avisen"}
         </button>
         <p id="form-error" class="form-error" hidden></p>
       </form>
 
+      <!-- Confirmación: cupo en Cohorte 3 -->
       <div id="confirmacion" class="confirmacion" hidden>
         <span class="eyebrow">Registro recibido</span>
         <p id="saludo-confirmacion" class="confirmacion-title">Tu lugar está apartado.</p>
         <p style="margin: 0; font-size: 15.5px; line-height: 1.6; color: var(--fg-2);">
           Tu cupo queda apartado como <b style="color: var(--fg-1);">pendiente por pagar</b>. Te
           escribimos al WhatsApp que registraste con las instrucciones de pago.
+        </p>
+      </div>
+
+      <!-- Confirmación: lista de interés Cohorte 4 -->
+      <div id="confirmacion-c4" class="confirmacion" hidden>
+        <span class="eyebrow">¡Anotado!</span>
+        <p id="saludo-confirmacion-c4" class="confirmacion-title">Estás en la lista.</p>
+        <p style="margin: 0; font-size: 15.5px; line-height: 1.6; color: var(--fg-2);">
+          Eres de los primeros en la lista de interés para <b style="color: var(--fg-1);">Cohorte 4</b>.
+          Cuando abramos inscripciones, te avisamos antes que a nadie.
         </p>
       </div>
     </div>
@@ -81,7 +105,9 @@ const { cuposDisponibles = 4 } = Astro.props;
 
   const form = document.getElementById("form-registro") as HTMLFormElement | null;
   const confirmacion = document.getElementById("confirmacion");
+  const confirmacionC4 = document.getElementById("confirmacion-c4");
   const saludoEl = document.getElementById("saludo-confirmacion");
+  const saludoElC4 = document.getElementById("saludo-confirmacion-c4");
   const errorEl = document.getElementById("form-error");
   const btn = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
 
@@ -117,15 +143,21 @@ const { cuposDisponibles = 4 } = Astro.props;
         throw new Error(body.error || "No pudimos guardar tu registro");
       }
 
-      track("registration_success", { form_id: "registro_cohorte_3" });
-      if (typeof window.fbq === "function") {
-        window.fbq("track", "Lead");
-      }
-
+      const resBody = await res.json() as { ok: boolean; nivelAsignado: number | null };
       const firstName = payload.nombre.split(" ")[0];
-      if (saludoEl) saludoEl.textContent = `${firstName}, tu lugar está apartado.`;
-      form.style.display = "none";
-      confirmacion?.removeAttribute("hidden");
+
+      if (resBody.nivelAsignado !== null) {
+        track("registration_success", { form_id: "registro_cohorte_3" });
+        if (typeof window.fbq === "function") window.fbq("track", "Lead");
+        if (saludoEl) saludoEl.textContent = `${firstName}, tu lugar está apartado.`;
+        form.style.display = "none";
+        confirmacion?.removeAttribute("hidden");
+      } else {
+        track("registration_success", { form_id: "interes_cohorte_4" });
+        if (saludoElC4) saludoElC4.textContent = `${firstName}, estás en la lista.`;
+        form.style.display = "none";
+        confirmacionC4?.removeAttribute("hidden");
+      }
     } catch (err) {
       const message = err instanceof Error ? err.message : "Error al enviar";
       track("registration_error", { error: message });
@@ -218,7 +250,7 @@ const { cuposDisponibles = 4 } = Astro.props;
     color: var(--danger);
     font-size: 13px;
   }
-  .confirmacion {
+  .confirmacion:not([hidden]) {
     display: flex;
     flex-direction: column;
     gap: 12px;

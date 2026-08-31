@@ -2,6 +2,19 @@
 // Sección 01 — Hero
 // Foto de fondo (salón Cotecnova o cohorte anterior) con overlay degradado.
 // CTA hace scroll suave a #registro.
+
+interface Props {
+  tier?: 1 | 2 | 3 | null;
+  cuposDisponibles?: number;
+}
+
+const { tier = 1, cuposDisponibles = 4 } = Astro.props;
+
+const tierLabel: Record<1 | 2 | 3, string> = {
+  1: `Pioneros · $400.000`,
+  2: `Early Bird · $460.000`,
+  3: `General · $540.000`,
+};
 ---
 
 <section
@@ -29,7 +42,7 @@
       <h1
         style="font-family: var(--font-display); font-weight: 900; font-size: clamp(38px, 8.2vw, 76px); line-height: 1.03; letter-spacing: -0.025em; margin: 0; color: var(--fg-1); text-wrap: balance;"
       >
-        La usas. Pero sientes que no le sacas <span class="gradient-text">todo el jugo</span>.
+        Usas la IA. Pero sientes que no le sacas <span class="gradient-text">todo el jugo</span>.
       </h1>
       <p
         style="font-family: var(--font-body); font-size: clamp(16px, 2.4vw, 20px); line-height: 1.55; color: var(--fg-2); margin: 0; max-width: 30ch; font-weight: 500;"
@@ -38,8 +51,12 @@
       </p>
       <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
         <a href="#registro" class="btn-primary" style="padding: 16px 30px; font-size: 17px;" id="hero-cta">
-          Reserva tu cupo
+          {tier !== null ? "Reserva tu cupo" : "Lista de interés Cohorte 4"}
         </a>
+        {tier !== null
+          ? <span class="cupos-badge">{cuposDisponibles} {cuposDisponibles === 1 ? "cupo" : "cupos"} · {tierLabel[tier]}</span>
+          : <span class="cupos-badge cupos-badge--agotado">Cohorte 3 completa</span>
+        }
       </div>
     </div>
   </div>
@@ -51,3 +68,15 @@
     track("cta_click", { location: "hero" });
   });
 </script>
+
+<style>
+  .cupos-badge {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--fg-2);
+    white-space: nowrap;
+  }
+  .cupos-badge--agotado {
+    color: var(--fg-3);
+  }
+</style>

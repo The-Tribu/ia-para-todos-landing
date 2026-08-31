@@ -12,13 +12,17 @@ import Pricing from "../components/Pricing.astro";
 import FAQ from "../components/FAQ.astro";
 import Registration from "../components/Registration.astro";
 import Footer from "../components/Footer.astro";
+import { getTierStatus } from "../lib/brevo";
 
-// Cupos actuales (actualizar manualmente según avance la venta)
-const cuposDisponibles = 4;
+const apiKey = import.meta.env.BREVO_API_KEY;
+const listId = Number.parseInt(import.meta.env.BREVO_LIST_ID ?? "11", 10);
+const { tier, cuposDisponibles } = apiKey
+  ? await getTierStatus(apiKey, listId)
+  : { tier: 1 as const, cuposDisponibles: 4 };
 ---
 
 <Layout>
-  <Hero />
+  <Hero tier={tier} cuposDisponibles={cuposDisponibles} />
   <SocialProof />
   <CycleDiagram />
   <Transformation />
@@ -26,8 +30,8 @@ const cuposDisponibles = 4;
   <Includes />
   <Testimonial />
   <Logistics />
-  <Pricing cuposDisponibles={cuposDisponibles} />
+  <Pricing tier={tier} cuposDisponibles={cuposDisponibles} />
   <FAQ />
-  <Registration cuposDisponibles={cuposDisponibles} />
+  <Registration tier={tier} cuposDisponibles={cuposDisponibles} />
   <Footer />
 </Layout>
