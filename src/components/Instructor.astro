@@ -2,6 +2,8 @@
 // Sección 05 — Quién enseña
 // Foto profesional + bio en 2 párrafos + credenciales.
 // The Tribu aparece solo como dato de trayectoria, no como marca aparte.
+import { Image } from "astro:assets";
+import jorgeFoto from "../assets/jorge-olarte.jpg";
 ---
 
 <section data-screen-label="05 Quién enseña" style="padding: clamp(64px, 10vw, 120px) 0;">
@@ -9,10 +11,17 @@
     style="max-width: 1080px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: clamp(28px, 5vw, 56px); align-items: start;"
   >
     <div
-      style="position: relative; width: 100%; aspect-ratio: 4 / 5; max-width: 420px; border-radius: var(--radius-xl); overflow: hidden; border: 1px solid var(--border-default); background: var(--bg-2); display: flex; align-items: center; justify-content: center; color: var(--fg-4); font-size: 13px;"
+      style="position: relative; width: 100%; aspect-ratio: 4 / 5; max-width: 420px; border-radius: var(--radius-xl); overflow: hidden; border: 1px solid var(--border-default); background: var(--bg-2);"
     >
-      <!-- TODO: <Image src={jorgeFoto} alt="Jorge Olarte" /> -->
-      [Foto profesional de Jorge Olarte]
+      <Image
+        src={jorgeFoto}
+        alt="Jorge Olarte — instructor del curso IA Para Todos"
+        width={840}
+        height={1050}
+        style="width: 100%; height: 100%; object-fit: cover; object-position: center top;"
+        loading="eager"
+        quality={80}
+      />
     </div>
     <div style="display: flex; flex-direction: column; gap: 22px;">
       <div style="display: flex; flex-direction: column; gap: 8px;">
