@@ -1,26 +1,41 @@
 ---
 // Sección 07 — Testimonio
-// Video vertical 9:16 (Felipe Gómez) + cita + atribución.
-// TODO: cuando el video esté editado, reemplazar la miniatura por <video> o embed.
+// Thumbnail WebP con overlay de play; click activa el <video> y lo reproduce.
+// Archivos en /public/testimonials/ para que Vercel los sirva como assets estáticos.
 ---
 
 <section data-screen-label="07 Testimonio" style="padding: clamp(64px, 10vw, 120px) 0;">
   <div
-    style="max-width: 1080px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: clamp(28px, 5vw, 56px); align-items: center;"
+    style="max-width: 1080px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: 330px 1fr; gap: clamp(28px, 5vw, 56px); align-items: center;"
+    class="testimonial-grid"
   >
+    <!-- Contenedor video/thumbnail -->
     <div
-      style="position: relative; width: 100%; max-width: 330px; aspect-ratio: 9 / 16; border-radius: var(--radius-xl); overflow: hidden; border: 1px solid var(--border-default); box-shadow: var(--shadow-lg); cursor: pointer; background: var(--bg-2);"
+      id="felipe-player"
+      style="position: relative; width: 100%; max-width: 330px; aspect-ratio: 9 / 16; border-radius: var(--radius-xl); overflow: hidden; border: 1px solid var(--border-default); box-shadow: var(--shadow-lg); cursor: pointer; background: #000;"
+      role="button"
+      aria-label="Reproducir testimonio de Felipe Gómez"
+      tabindex="0"
     >
+      <!-- Thumbnail -->
+      <img
+        id="felipe-thumbnail"
+        src="/testimonials/felipe-thumbnail.webp"
+        alt="Felipe Gómez Ospina — Testimonio IA para Todos"
+        width="330"
+        height="587"
+        loading="lazy"
+        decoding="async"
+        style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;"
+      />
+
+      <!-- Overlay play button -->
       <div
-        style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--fg-4); font-size: 13px; text-align: center; padding: 20px;"
-      >
-        [Miniatura video vertical · Felipe Gómez]
-      </div>
-      <div
+        id="felipe-play-btn"
         style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none;"
       >
         <div
-          style="width: 68px; height: 68px; border-radius: 999px; background: var(--tribu-gradient); box-shadow: var(--shadow-accent); display: flex; align-items: center; justify-content: center;"
+          style="width: 68px; height: 68px; border-radius: 999px; background: var(--tribu-gradient); box-shadow: var(--shadow-accent); display: flex; align-items: center; justify-content: center; transition: transform 0.15s ease;"
         >
           <div
             style="width: 0; height: 0; margin-left: 5px; border-left: 20px solid #fff; border-top: 12px solid transparent; border-bottom: 12px solid transparent;"
@@ -28,7 +43,19 @@
           </div>
         </div>
       </div>
+
+      <!-- Video (oculto hasta click) -->
+      <video
+        id="felipe-video"
+        src="/testimonials/felipe-testimonio.mp4"
+        playsinline
+        controls
+        preload="none"
+        style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none;"
+      ></video>
     </div>
+
+    <!-- Cita y atribución -->
     <div style="display: flex; flex-direction: column; gap: 20px;">
       <span class="eyebrow">Testimonio</span>
       <p
@@ -47,3 +74,41 @@
     </div>
   </div>
 </section>
+
+<style>
+  @media (max-width: 600px) {
+    .testimonial-grid {
+      grid-template-columns: 1fr !important;
+    }
+    .testimonial-grid > :first-child {
+      max-width: 280px;
+      margin-inline: auto;
+    }
+  }
+</style>
+
+<script>
+  const player = document.getElementById("felipe-player");
+  const thumbnail = document.getElementById("felipe-thumbnail");
+  const playBtn = document.getElementById("felipe-play-btn");
+  const video = document.getElementById("felipe-video") as HTMLVideoElement;
+
+  function activateVideo() {
+    thumbnail.style.display = "none";
+    playBtn.style.display = "none";
+    video.style.display = "block";
+    video.play();
+    player.removeEventListener("click", activateVideo);
+    player.removeEventListener("keydown", handleKey);
+  }
+
+  function handleKey(e: KeyboardEvent) {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      activateVideo();
+    }
+  }
+
+  player.addEventListener("click", activateVideo);
+  player.addEventListener("keydown", handleKey);
+</script>
