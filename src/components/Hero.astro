@@ -21,10 +21,16 @@ const tierLabel: Record<1 | 2 | 3, string> = {
   data-screen-label="01 Hero"
   style="position: relative; min-height: min(88vh, 760px); display: flex; align-items: flex-end; padding: clamp(96px, 18vw, 200px) 0 clamp(48px, 7vw, 88px); overflow: hidden;"
 >
-  <!-- Foto de fondo (placeholder hasta tener imagen real) -->
-  <div style="position: absolute; inset: 0; background: var(--bg-2);">
-    <!-- TODO: reemplazar con <Image src={heroSalon} alt="Salón de Cotecnova" /> cuando tengamos la foto -->
-  </div>
+  <!-- Foto de fondo cohorte -->
+  <img
+    src="/hero/fondo-cohorte.webp"
+    alt="Estudiantes de IA para Todos en Cotecnova, Cartago"
+    width="1440"
+    height="1080"
+    fetchpriority="high"
+    decoding="async"
+    style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top;"
+  />
 
   <!-- Overlay degradado sobre la foto -->
   <div
