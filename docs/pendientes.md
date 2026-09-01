@@ -25,11 +25,10 @@ Lista de ítems sin resolver para finalizar la página web antes del deadline (5
 - **Implementado en:** `src/components/Transformation.astro` — `avatar: "/avatars/felipe-gomez.webp"`
 
 ### ~~OG Image — thumbnail al compartir por WhatsApp / redes~~ ✅ Resuelto
-- **Branch:** `fix/og-image-url`
-- **Asset:** `public/og/og-image.jpg` — 63 KB, 1200 × 630 px
-- **Implementado en:** `src/layouts/Layout.astro` — `og:image`, `og:url`, `og:image:width/height`, `twitter:card`
-- **Dominio:** `https://ia.thetribu.dev/`
-- **Verificación pendiente:** confirmar preview en WhatsApp una vez el deploy esté en producción
+- **Branch:** `feat/og-image`
+- **Asset:** `public/og/og-image.jpg` — 63 KB, 1200 × 630 px (desde 173 KB / 2400×1260)
+- **Implementado en:** `src/layouts/Layout.astro` — `og:image`, `og:image:width`, `og:image:height`, `og:url`, `twitter:card`
+- **Verificación pendiente:** confirmar preview en WhatsApp una vez el dominio `iaparatodos.co` esté en producción
 
 ---
 
