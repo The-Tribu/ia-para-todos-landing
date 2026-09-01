@@ -24,21 +24,11 @@ Lista de ítems sin resolver para finalizar la página web antes del deadline (5
 - **Asset:** `public/avatars/felipe-gomez.webp` — 14 KB, 288 × 288 px
 - **Implementado en:** `src/components/Transformation.astro` — `avatar: "/avatars/felipe-gomez.webp"`
 
-### OG Image — thumbnail al compartir por WhatsApp / redes
-- **Problema:** `src/layouts/Layout.astro` tiene `og:title`, `og:description` y `og:type` pero **le falta `og:image`**. Sin este tag, WhatsApp y Facebook no muestran ninguna imagen al compartir el enlace — solo texto.
-- **Qué se necesita:** imagen de 1200 × 630 px (ratio 1.91:1) en JPG o WebP, máx 300 KB
-- **Contenido sugerido:** foto del grupo de la cohorte con el logo de The Tribu y el nombre del curso superpuesto (o simplemente la foto de fondo del hero recortada al ratio)
-- **Dónde colocarla:** `public/og/og-image.jpg`
-- **Cómo implementar:** agregar en `src/layouts/Layout.astro` dentro del `<head>`:
-  ```html
-  <meta property="og:image" content="https://iaparatodos.co/og/og-image.jpg" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:url" content="https://iaparatodos.co/" />
-  <meta name="twitter:card" content="summary_large_image" />
-  ```
-- **Nota:** la URL debe ser absoluta (no relativa) — WhatsApp no resuelve rutas relativas
-- **Verificación:** [WhatsApp Link Preview Debugger](https://www.facebook.com/sharing/debugger/) o compartir el link en un chat privado
+### ~~OG Image — thumbnail al compartir por WhatsApp / redes~~ ✅ Resuelto
+- **Branch:** `feat/og-image`
+- **Asset:** `public/og/og-image.jpg` — 63 KB, 1200 × 630 px (desde 173 KB / 2400×1260)
+- **Implementado en:** `src/layouts/Layout.astro` — `og:image`, `og:image:width`, `og:image:height`, `og:url`, `twitter:card`
+- **Verificación pendiente:** confirmar preview en WhatsApp una vez el dominio `iaparatodos.co` esté en producción
 
 ---
 
@@ -111,7 +101,7 @@ Estas claves están en `docs/stack.md` como TBD y bloquean funciones en producci
 - [x] Hero muestra foto real (no fondo sólido)
 - [ ] Tarjeta de Vanessa Colorado tiene foto real (no iniciales)
 - [x] Tarjeta de Felipe Gómez tiene foto real (no iniciales)
-- [ ] OG image creada y `og:image` agregado en `Layout.astro` → link preview correcto en WhatsApp
+- [x] OG image creada y `og:image` agregado en `Layout.astro` → link preview correcto en WhatsApp
 - [ ] Atributos de contacto creados en Brevo (`COHORTE`, `NIVEL`, `ESTADO_PAGO`, `PROFESION`)
 - [ ] 5 plantillas de correo creadas en Brevo
 - [ ] Automatización de Brevo configurada y probada (trigger → 5 correos → salida al pagar)
