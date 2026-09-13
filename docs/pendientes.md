@@ -28,7 +28,7 @@ Lista de ítems sin resolver para finalizar la página web antes del deadline (5
 - **Branch:** `feat/og-image`
 - **Asset:** `public/og/og-image.jpg` — 63 KB, 1200 × 630 px (desde 173 KB / 2400×1260)
 - **Implementado en:** `src/layouts/Layout.astro` — `og:image`, `og:image:width`, `og:image:height`, `og:url`, `twitter:card`
-- **Verificación pendiente:** confirmar preview en WhatsApp una vez el dominio `iaparatodos.co` esté en producción
+- **Verificación pendiente:** confirmar preview en WhatsApp una vez el dominio `latribuia.com` esté en producción
 
 ---
 

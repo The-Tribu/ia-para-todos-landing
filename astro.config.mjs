@@ -4,5 +4,5 @@ import vercel from "@astrojs/vercel";
 export default defineConfig({
   output: "server",
   adapter: vercel(),
-  site: "https://ia-para-todos.vercel.app",
+  site: "https://latribuia.com",
 });
