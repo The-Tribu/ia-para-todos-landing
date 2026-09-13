@@ -44,7 +44,7 @@ const tiers = [
     >
       {tiers.map((t) => {
         const isActive = tier === t.id;
-        const isSoldOut = tier === null;
+        const isSoldOut = tier === null || t.id < tier;
         return (
           <div class={isActive ? "price-card price-card-active" : isSoldOut ? "price-card price-card-disabled" : "price-card"}>
             {isActive && (
@@ -52,8 +52,9 @@ const tiers = [
             )}
             <div style={`position: relative; display: flex; flex-direction: column; gap: 8px;`}>
               {isActive && <span class="eyebrow">Nivel vigente</span>}
-              <p style={`margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 20px; color: ${isActive ? "var(--fg-1)" : isSoldOut ? "var(--fg-4)" : "var(--fg-2)"};`}>
+              <p style={`margin: 0; display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 700; font-size: 20px; color: ${isActive ? "var(--fg-1)" : isSoldOut ? "var(--fg-4)" : "var(--fg-2)"};`}>
                 {t.nombre}
+                {isSoldOut && <span class="sold-out-tag">Agotado</span>}
               </p>
               <p style={`margin: 0; font-family: var(--font-display); font-weight: 900; font-size: ${isActive ? "clamp(34px, 5.6vw, 46px)" : "clamp(26px, 4vw, 32px)"}; letter-spacing: -0.03em; color: ${isActive ? "var(--fg-1)" : isSoldOut ? "var(--fg-4)" : "var(--fg-3)"};`}>
                 {t.precio}
@@ -61,7 +62,9 @@ const tiers = [
               <p style={`margin: 0; font-size: 14px; color: ${isActive ? "var(--fg-2)" : isSoldOut ? "var(--fg-4)" : "var(--fg-3)"};`}>
                 {isActive
                   ? `${cuposDisponibles} ${cuposDisponibles === 1 ? "cupo disponible" : "cupos disponibles"}`
-                  : `${t.cuposCap} cupos`}
+                  : isSoldOut
+                    ? `${t.cuposCap} cupos vendidos`
+                    : `${t.cuposCap} cupos`}
               </p>
             </div>
           </div>
@@ -114,6 +117,19 @@ const tiers = [
   }
   .price-card-disabled {
     opacity: 0.45;
+  }
+  .sold-out-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--fg-4);
   }
   .sold-out-banner {
     display: inline-flex;
