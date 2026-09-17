@@ -33,7 +33,8 @@
                   └─────────────────────────────────┘
                          │
                          ▼
-                  Brevo — estado: pendiente por pagar
+                  Brevo — lista IAT | Prospectos
+                  estado: pendiente por pagar
                          │
                          ▼
               ┌──────────────────────────┐
@@ -44,7 +45,9 @@
               ┌──────────┴───────────┐
               ▼                      ▼
          Paga solo             Se traba →
-         (marcar en Brevo)     WhatsApp → Jorge cierra
+         (mover a la lista     WhatsApp → Jorge cierra
+          IAT-C3 | Estudiantes
+          + ESTADO_PAGO = 3)
 ```
 
 ## El Funnel — 3 Etapas (Meta Ads)

@@ -10,7 +10,10 @@ interface RegistrationPayload {
   profesion: string;
 }
 
-const BREVO_LIST_ID = Number.parseInt(import.meta.env.BREVO_LIST_ID ?? "0", 10);
+// Lista de prospectos: ahí escribe el formulario. El paso a la lista de estudiantes es manual.
+const BREVO_LIST_ID = Number.parseInt(import.meta.env.BREVO_LIST_ID ?? "11", 10);
+// Lista de estudiantes: solo se lee, para derivar el tier vigente.
+const BREVO_STUDENTS_LIST_ID = Number.parseInt(import.meta.env.BREVO_STUDENTS_LIST_ID ?? "13", 10);
 
 export const POST: APIRoute = async ({ request }) => {
   const apiKey = import.meta.env.BREVO_API_KEY;
@@ -30,7 +33,20 @@ export const POST: APIRoute = async ({ request }) => {
     return json({ error: "Faltan campos obligatorios" }, 400);
   }
 
-  const { tier } = await getTierStatus(apiKey, BREVO_LIST_ID);
+  // Un contacto que ya pagó no se toca: el upsert lo degradaría a "pendiente por pagar" y su
+  // cupo desaparecería del conteo. Pasó en producción con un estudiante que llenó el formulario
+  // después de pagar.
+  const yaPagado = await getContactoPagado(apiKey, email);
+  if (yaPagado) {
+    const nivel = Number.parseInt(yaPagado.NIVEL ?? "", 10);
+    return json({
+      ok: true,
+      yaInscrito: true,
+      nivelAsignado: Number.isNaN(nivel) ? null : nivel,
+    });
+  }
+
+  const { tier } = await getTierStatus(apiKey, BREVO_STUDENTS_LIST_ID);
 
   const nameParts = nombre.trim().split(/\s+/);
   const firstName = nameParts[0] ?? "";
@@ -76,12 +92,37 @@ export const POST: APIRoute = async ({ request }) => {
       return json({ error: "No pudimos guardar tu registro. Intenta de nuevo." }, 502);
     }
 
-    return json({ ok: true, nivelAsignado: tier });
+    return json({ ok: true, yaInscrito: false, nivelAsignado: tier });
   } catch (err) {
     console.error("Brevo request failed:", err);
     return json({ error: "Error de conexión. Intenta de nuevo." }, 500);
   }
 };
+
+// Devuelve los atributos del contacto solo si ya está pagado (ESTADO_PAGO=3); null en cualquier
+// otro caso, incluido que no exista o que Brevo falle — ahí seguimos con el registro normal.
+async function getContactoPagado(
+  apiKey: string,
+  email: string
+): Promise<Record<string, string | undefined> | null> {
+  try {
+    const res = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
+      headers: { Accept: "application/json", "api-key": apiKey },
+    });
+
+    if (res.status === 404) return null;
+    if (!res.ok) throw new Error(`Brevo ${res.status}`);
+
+    const contact = (await res.json()) as {
+      attributes?: Record<string, string | undefined>;
+    };
+    const attributes = contact.attributes ?? {};
+    return attributes.ESTADO_PAGO === "3" ? attributes : null;
+  } catch (err) {
+    console.error("Brevo contact lookup failed:", err);
+    return null;
+  }
+}
 
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {

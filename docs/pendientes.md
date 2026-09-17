@@ -40,9 +40,19 @@ La secuencia completa está definida en `docs/estrategia-marketing.md` pero **no
 
 | Atributo Brevo | Valores posibles | Qué indica |
 |----------------|-----------------|------------|
-| `COHORTE` | `"cohorte-3"` | A qué cohorte pertenece el registro |
-| `NIVEL` | `"1"` \| `"2"` \| `"3"` | Tier de precio asignado (Pioneros / Early Bird / General) |
-| `ESTADO_PAGO` | `"3"` = pagado | Estado del pago — solo `"3"` libera el cupo en `getTierStatus()` |
+| `COHORTE` | `"cohorte-3"` \| `"cohorte-4"` | A qué cohorte pertenece el registro (`cohorte-4` = lista de espera) |
+| `NIVEL` | `"1"` \| `"2"` \| `"3"` \| `"4"` | Tier de precio asignado (Pioneros / Early Bird / General / regalo) |
+| `ESTADO_PAGO` | `"1"` prospecto \| `"2"` pendiente por pagar \| `"3"` pagado | Estado del pago |
+
+### Cómo se cuentan los cupos ocupados
+
+`getTierStatus()` lee **la lista de estudiantes** (`BREVO_STUDENTS_LIST_ID`, hoy `13`), no la de
+prospectos. Un cupo se considera ocupado solo cuando se cumplen **ambas** condiciones:
+
+1. el contacto está en la lista de estudiantes, **y**
+2. tiene `ESTADO_PAGO = "3"` (pagado) con `COHORTE = "cohorte-3"`.
+
+`NIVEL = "4"` (regalo) **no ocupa cupo**: no cuenta para ningún tier de precio ni para el total de 12.
 
 ### Paso 1 — Atributos de contacto en Brevo (configurar una sola vez)
 Crear los atributos personalizados en **Brevo → Contacts → Settings → Contact attributes**:
@@ -51,8 +61,17 @@ Crear los atributos personalizados en **Brevo → Contacts → Settings → Cont
 - `ESTADO_PAGO` — tipo texto
 - `PROFESION` — tipo texto (lo envía el formulario, campo `profesion`)
 
-### Paso 2 — Lista de contactos
-Crear o confirmar la lista en **Brevo → Contacts → Lists** y anotar su ID numérico → ese ID va en la variable de entorno `BREVO_LIST_ID`.
+### Paso 2 — Listas de contactos
+Son **dos** listas en **Brevo → Contacts → Lists**, con roles distintos:
+
+| Lista | ID | Variable de entorno | Rol |
+|-------|----|---------------------|-----|
+| `IAT \| Prospectos` | 11 | `BREVO_LIST_ID` | Donde el formulario de la landing crea o actualiza el contacto |
+| `IAT-C3 \| Estudiantes` | 13 | `BREVO_STUDENTS_LIST_ID` | Quien ya se inscribió — de aquí sale el conteo de cupos |
+
+**El paso de una lista a otra es manual.** Cuando alguien confirma el pago, Jorge mueve el contacto a
+`IAT-C3 | Estudiantes` y le pone `ESTADO_PAGO = 3`. La landing nunca escribe en la lista de
+estudiantes: solo la lee.
 
 ### Paso 3 — 5 plantillas de correo (crear en Brevo → Email → Templates)
 
@@ -65,7 +84,7 @@ Crear o confirmar la lista en **Brevo → Contacts → Lists** y anotar su ID nu
 | 5 | "Última oportunidad — tu cupo se libera mañana" | 48 h antes del cierre de ventas (16 sep) | Último aviso, urgencia máxima |
 
 ### Paso 4 — Automatización en Brevo (Automation → Create workflow)
-- **Trigger:** contacto añadido a la lista `BREVO_LIST_ID` con `COHORTE = cohorte-3`
+- **Trigger:** contacto añadido a la lista de prospectos (`BREVO_LIST_ID`) con `COHORTE = cohorte-3`
 - **Condición de salida:** `ESTADO_PAGO = 3` (pagó → salir de la secuencia)
 - **Flujo:** enviar correo 1 → esperar 24 h → si no pagó, correo 2 → esperar 48 h → correo 3 → esperar 2–3 días → correo 4 → esperar hasta 48 h antes del 17 sep → correo 5
 
@@ -82,9 +101,10 @@ Estas claves están en `docs/stack.md` como TBD y bloquean funciones en producci
 |----------|-----|--------|
 | `META_PIXEL_ID` | Retargeting Meta Ads etapas 2 y 3; dispara `fbq('track', 'PageView')` en `Layout.astro` | Pendiente |
 | `BREVO_API_KEY` | Submit del formulario de registro → `POST /v3/contacts` de Brevo | Pendiente |
-| `BREVO_LIST_ID` | ID de la lista en Brevo donde se crean los contactos | Pendiente — default hardcodeado en `11` |
+| `BREVO_LIST_ID` | ID de la lista de prospectos (`IAT \| Prospectos`) donde el formulario crea los contactos | Pendiente — default hardcodeado en `11` |
+| `BREVO_STUDENTS_LIST_ID` | ID de la lista de estudiantes (`IAT-C3 \| Estudiantes`) de donde se cuentan los cupos ocupados | Pendiente — default hardcodeado en `13` |
 
-> Sin `BREVO_API_KEY` el formulario falla en producción. El tier y cupos caen al fallback de desarrollo (tier 1, 4 cupos) en `src/pages/index.astro:20`.
+> Sin `BREVO_API_KEY` el formulario falla en producción. El tier y cupos caen a `FALLBACK_TIER_STATUS` en `src/lib/brevo.ts` — hoy tier 2 (Early Bird) con 1 cupo. Ese valor es deliberadamente conservador: si Brevo no responde, la landing nunca debe ofrecer un nivel de precio ya agotado. **Actualizarlo a mano cuando avance la venta.**
 
 ---
 
@@ -107,7 +127,8 @@ Estas claves están en `docs/stack.md` como TBD y bloquean funciones en producci
 - [ ] Automatización de Brevo configurada y probada (trigger → 5 correos → salida al pagar)
 - [ ] Sender verificado en Brevo
 - [ ] `META_PIXEL_ID` configurado en Vercel → `fbq` se dispara en `PageView` y `Lead`
-- [ ] `BREVO_API_KEY` y `BREVO_LIST_ID` configurados en Vercel → formulario funciona en producción
+- [ ] `BREVO_API_KEY`, `BREVO_LIST_ID` (11) y `BREVO_STUDENTS_LIST_ID` (13) configurados en Vercel → formulario funciona en producción
+- [ ] El conteo de cupos de la landing coincide con la lista `IAT-C3 | Estudiantes` (solo contactos con `ESTADO_PAGO = 3`, ignorando `NIVEL = 4`)
 - [ ] Flujo completo del formulario probado end-to-end: submit → contacto en Brevo → correo 1 llega
 - [ ] Google Analytics activo y recibiendo hits
 - [ ] Vercel preview URL revisada en móvil (< 390 px) y escritorio

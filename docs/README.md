@@ -22,6 +22,7 @@ Documentación de estrategia y diseño importada del second brain (The Tribu Obs
 - **Lugar:** Cotecnova · Cartago, Valle del Cauca
 - **Cupos:** 12 (presencial, sin transmisión virtual)
 - **Stack:** Vercel (hosting) + Brevo (registro y nutrición) — Luma deprecado
+- **Listas Brevo:** `IAT | Prospectos` (ID 11, donde escribe el formulario) y `IAT-C3 | Estudiantes` (ID 13, de donde se cuentan los cupos ocupados) — el paso de una a otra es manual al confirmar el pago
 - **Precios:** Pioneros $400k → Early Bird $460k → General $540k → ancla $600k (tachado)
 - **Ventana de marketing:** 29 ago – 17 sep 2026
 - **Deadline de construcción:** 5 sep 2026

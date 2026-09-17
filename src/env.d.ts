@@ -3,6 +3,7 @@
 interface ImportMetaEnv {
   readonly BREVO_API_KEY: string;
   readonly BREVO_LIST_ID: string;
+  readonly BREVO_STUDENTS_LIST_ID: string;
   readonly META_PIXEL_ID: string;
 }
 
