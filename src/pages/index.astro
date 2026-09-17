@@ -12,13 +12,14 @@ import Pricing from "../components/Pricing.astro";
 import FAQ from "../components/FAQ.astro";
 import Registration from "../components/Registration.astro";
 import Footer from "../components/Footer.astro";
-import { getTierStatus } from "../lib/brevo";
+import { FALLBACK_TIER_STATUS, getTierStatus } from "../lib/brevo";
 
 const apiKey = import.meta.env.BREVO_API_KEY;
-const listId = Number.parseInt(import.meta.env.BREVO_LIST_ID ?? "11", 10);
+// El conteo de cupos sale de la lista de estudiantes (13), no de la de prospectos (11).
+const studentsListId = Number.parseInt(import.meta.env.BREVO_STUDENTS_LIST_ID ?? "13", 10);
 const { tier, cuposDisponibles } = apiKey
-  ? await getTierStatus(apiKey, listId)
-  : { tier: 1 as const, cuposDisponibles: 4 };
+  ? await getTierStatus(apiKey, studentsListId)
+  : FALLBACK_TIER_STATUS;
 ---
 
 <Layout>

@@ -3,12 +3,17 @@
 // Foto de fondo (salón Cotecnova o cohorte anterior) con overlay degradado.
 // CTA hace scroll suave a #registro.
 
+import { FALLBACK_TIER_STATUS } from "../lib/brevo";
+
 interface Props {
   tier?: 1 | 2 | 3 | null;
   cuposDisponibles?: number;
 }
 
-const { tier = 1, cuposDisponibles = 4 } = Astro.props;
+const {
+  tier = FALLBACK_TIER_STATUS.tier,
+  cuposDisponibles = FALLBACK_TIER_STATUS.cuposDisponibles,
+} = Astro.props;
 
 const tierLabel: Record<1 | 2 | 3, string> = {
   1: `Pioneros · $400.000`,

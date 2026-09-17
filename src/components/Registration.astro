@@ -3,12 +3,17 @@
 // id="registro" — destino de todos los CTAs.
 // Form propio → POST a /api/register → Brevo Contacts API.
 
+import { FALLBACK_TIER_STATUS } from "../lib/brevo";
+
 interface Props {
   tier?: 1 | 2 | 3 | null;
   cuposDisponibles?: number;
 }
 
-const { tier = 1, cuposDisponibles = 4 } = Astro.props;
+const {
+  tier = FALLBACK_TIER_STATUS.tier,
+  cuposDisponibles = FALLBACK_TIER_STATUS.cuposDisponibles,
+} = Astro.props;
 
 const tierInfo = {
   1: { label: "Pioneros", precio: "$400.000" },
@@ -87,6 +92,17 @@ const activeTier = tier !== null ? tierInfo[tier] : null;
         </p>
       </div>
 
+      <!-- Confirmación: el contacto ya está inscrito y pagado -->
+      <div id="confirmacion-inscrito" class="confirmacion" hidden>
+        <span class="eyebrow">Ya estás dentro</span>
+        <p id="saludo-confirmacion-inscrito" class="confirmacion-title">Tu cupo ya está confirmado.</p>
+        <p style="margin: 0; font-size: 15.5px; line-height: 1.6; color: var(--fg-2);">
+          Tu inscripción ya está <b style="color: var(--fg-1);">pagada y confirmada</b>. No tienes que
+          hacer nada más — te escribimos al WhatsApp que registraste con los detalles del primer
+          sábado.
+        </p>
+      </div>
+
       <!-- Confirmación: lista de interés Cohorte 4 -->
       <div id="confirmacion-c4" class="confirmacion" hidden>
         <span class="eyebrow">¡Anotado!</span>
@@ -106,8 +122,10 @@ const activeTier = tier !== null ? tierInfo[tier] : null;
   const form = document.getElementById("form-registro") as HTMLFormElement | null;
   const confirmacion = document.getElementById("confirmacion");
   const confirmacionC4 = document.getElementById("confirmacion-c4");
+  const confirmacionInscrito = document.getElementById("confirmacion-inscrito");
   const saludoEl = document.getElementById("saludo-confirmacion");
   const saludoElC4 = document.getElementById("saludo-confirmacion-c4");
+  const saludoElInscrito = document.getElementById("saludo-confirmacion-inscrito");
   const errorEl = document.getElementById("form-error");
   const btn = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
 
@@ -143,10 +161,20 @@ const activeTier = tier !== null ? tierInfo[tier] : null;
         throw new Error(body.error || "No pudimos guardar tu registro");
       }
 
-      const resBody = await res.json() as { ok: boolean; nivelAsignado: number | null };
+      const resBody = await res.json() as {
+        ok: boolean;
+        nivelAsignado: number | null;
+        yaInscrito?: boolean;
+      };
       const firstName = payload.nombre.split(" ")[0];
 
-      if (resBody.nivelAsignado !== null) {
+      if (resBody.yaInscrito) {
+        // Ya pagó: no se registra de nuevo ni se cuenta como lead nuevo.
+        track("registration_already_enrolled");
+        if (saludoElInscrito) saludoElInscrito.textContent = `${firstName}, tu cupo ya está confirmado.`;
+        form.style.display = "none";
+        confirmacionInscrito?.removeAttribute("hidden");
+      } else if (resBody.nivelAsignado !== null) {
         track("registration_success", { form_id: "registro_cohorte_3" });
         if (typeof window.fbq === "function") window.fbq("track", "Lead");
         if (saludoEl) saludoEl.textContent = `${firstName}, tu lugar está apartado.`;

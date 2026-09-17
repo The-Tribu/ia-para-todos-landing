@@ -3,12 +3,17 @@
 // 3 tarjetas + anclaje $600k tachado.
 // Nivel vigente destacado con borde accent + glow.
 
+import { FALLBACK_TIER_STATUS } from "../lib/brevo";
+
 interface Props {
   tier?: 1 | 2 | 3 | null;
   cuposDisponibles?: number;
 }
 
-const { tier = 1, cuposDisponibles = 4 } = Astro.props;
+const {
+  tier = FALLBACK_TIER_STATUS.tier,
+  cuposDisponibles = FALLBACK_TIER_STATUS.cuposDisponibles,
+} = Astro.props;
 
 const tiers = [
   { id: 1, nombre: "Pioneros", precio: "$400.000", cuposCap: 4 },
