@@ -1,6 +1,11 @@
 ---
 // Sección 08 — Logística
-// Mapa/ubicación + datos duros: fechas, dirección, qué llevar.
+// Fechas + datos duros. El mapa y la dirección solo se publican cuando la sede está
+// confirmada (COHORTE.sede); mientras tanto la página dice la ciudad y nada más,
+// para no anunciar un salón que todavía no está cerrado.
+import { COHORTE } from "../lib/cohorte";
+
+const { sede } = COHORTE;
 ---
 
 <section
@@ -8,28 +13,33 @@
   style="padding: clamp(56px, 9vw, 104px) 0; background: var(--bg-1); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);"
 >
   <div
-    style="max-width: 1080px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: clamp(24px, 4vw, 44px); align-items: stretch;"
+    class:list={["logistics-grid", !sede && "logistics-grid--sin-mapa"]}
+    style="max-width: 1080px; margin: 0 auto; padding: 0 20px;"
   >
-    <a
-      href="https://www.google.com/maps/search/Cotecnova,+Cra.+4+%237-25,+Cartago,+Valle+del+Cauca,+Colombia"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="map-link"
-      aria-label="Ver Cotecnova en Google Maps"
-    >
-      <img
-        src="/assets/mapa-cotecnova.png"
-        alt="Mapa de Cotecnova, Cra. 4 #7-25, Cartago"
-        width="768"
-        height="768"
-        loading="lazy"
-        decoding="async"
-      />
-      <span class="map-overlay">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        Abrir en Google Maps
-      </span>
-    </a>
+    {
+      sede && (
+        <a
+          href={sede.mapaUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="map-link"
+          aria-label={`Ver ${sede.nombre} en Google Maps`}
+        >
+          <img
+            src={sede.mapaImg}
+            alt={`Mapa de ${sede.nombre}, ${sede.direccion}`}
+            width="768"
+            height="768"
+            loading="lazy"
+            decoding="async"
+          />
+          <span class="map-overlay">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Abrir en Google Maps
+          </span>
+        </a>
+      )
+    }
     <div style="display: flex; flex-direction: column; gap: 22px;">
       <h2
         style="font-family: var(--font-display); font-weight: 700; font-size: clamp(26px, 4.6vw, 40px); line-height: 1.15; letter-spacing: -0.02em; margin: 0;"
@@ -37,18 +47,22 @@
         Dónde y cuándo
       </h2>
       <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-        <span class="tag">Sáb 19 sep</span>
-        <span class="tag">Sáb 26 sep</span>
-        <span class="tag">Sáb 3 oct</span>
-        <span class="tag">Sáb 10 oct</span>
-        <span class="tag">9:00 AM – 12:00 PM</span>
+        {COHORTE.fechas.map((fecha) => <span class="tag">{fecha}</span>)}
+        <span class="tag">{COHORTE.horario}</span>
       </div>
       <div style="display: flex; flex-direction: column; gap: 14px;">
         <div style="display: flex; flex-direction: column; gap: 3px;">
-          <span class="logistics-label">Dirección</span>
+          <span class="logistics-label">{sede ? "Dirección" : "Dónde"}</span>
           <p style="margin: 0; font-size: 16px; line-height: 1.5; color: var(--fg-1);">
-            Cotecnova — Cra. 4 #7-25, Cartago, Valle del Cauca
+            {sede ? `${sede.nombre} — ${sede.direccion}` : COHORTE.ciudad}
           </p>
+          {
+            !sede && (
+              <p style="margin: 4px 0 0; font-size: 14.5px; line-height: 1.5; color: var(--fg-3);">
+                Te confirmamos el salón exacto por WhatsApp antes de la primera sesión.
+              </p>
+            )
+          }
         </div>
         <div style="display: flex; flex-direction: column; gap: 3px;">
           <span class="logistics-label">Qué llevar</span>
@@ -56,18 +70,33 @@
             Computador portátil — es requisito para los ejercicios prácticos.
           </p>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 3px;">
-          <span class="logistics-label">Cómo llegar</span>
-          <p style="margin: 0; font-size: 16px; line-height: 1.5; color: var(--fg-2);">
-            A dos cuadras del parque principal. Parqueadero público sobre la Cra. 4.
-          </p>
-        </div>
+        {
+          sede && (
+            <div style="display: flex; flex-direction: column; gap: 3px;">
+              <span class="logistics-label">Cómo llegar</span>
+              <p style="margin: 0; font-size: 16px; line-height: 1.5; color: var(--fg-2);">
+                {sede.comoLlegar}
+              </p>
+            </div>
+          )
+        }
       </div>
     </div>
   </div>
 </section>
 
 <style>
+  .logistics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: clamp(24px, 4vw, 44px);
+    align-items: stretch;
+  }
+  .logistics-grid--sin-mapa {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 760px;
+  }
+
   .logistics-label {
     font-size: 12px;
     letter-spacing: 0.12em;

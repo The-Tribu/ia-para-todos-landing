@@ -4,6 +4,7 @@
 // Form propio → POST a /api/register → Brevo Contacts API.
 
 import { FALLBACK_TIER_STATUS } from "../lib/brevo";
+import { COHORTE, TIERS } from "../lib/cohorte";
 
 interface Props {
   tier?: 1 | 2 | 3 | null;
@@ -15,11 +16,9 @@ const {
   cuposDisponibles = FALLBACK_TIER_STATUS.cuposDisponibles,
 } = Astro.props;
 
-const tierInfo = {
-  1: { label: "Pioneros", precio: "$400.000" },
-  2: { label: "Early Bird", precio: "$460.000" },
-  3: { label: "General", precio: "$540.000" },
-} as const;
+const tierInfo = Object.fromEntries(
+  TIERS.map((t) => [t.id, { label: t.nombre, precio: t.precio }])
+) as Record<1 | 2 | 3, { label: string; precio: string }>;
 
 const activeTier = tier !== null ? tierInfo[tier] : null;
 ---
@@ -31,12 +30,14 @@ const activeTier = tier !== null ? tierInfo[tier] : null;
       <h2
         style="font-family: var(--font-display); font-weight: 900; font-size: clamp(30px, 5.4vw, 48px); line-height: 1.08; letter-spacing: -0.025em; margin: 0;"
       >
-        {tier !== null ? "Empezamos el 19 de septiembre." : "Los cupos de Cohorte 3 están completos."}
+        {tier !== null
+          ? `Empezamos el ${COHORTE.inicio}.`
+          : `Los cupos de Cohorte ${COHORTE.numero} están completos.`}
       </h2>
       <p style="margin: 0; font-size: clamp(16px, 2.4vw, 19px); line-height: 1.55; color: var(--fg-2);">
         {activeTier
           ? `Quedan ${cuposDisponibles} ${cuposDisponibles === 1 ? "cupo" : "cupos"} ${activeTier.label} a ${activeTier.precio}.`
-          : "Déjanos tus datos y serás el primero en conocer la apertura de Cohorte 4."}
+          : `Déjanos tus datos y serás el primero en conocer la apertura de Cohorte ${COHORTE.siguienteNumero}.`}
       </p>
       <p style="margin: 0; font-size: 14px; color: var(--fg-3);">
         {tier !== null
@@ -82,7 +83,7 @@ const activeTier = tier !== null ? tierInfo[tier] : null;
         <p id="form-error" class="form-error" hidden></p>
       </form>
 
-      <!-- Confirmación: cupo en Cohorte 3 -->
+      <!-- Confirmación: cupo en la cohorte en venta -->
       <div id="confirmacion" class="confirmacion" hidden>
         <span class="eyebrow">Registro recibido</span>
         <p id="saludo-confirmacion" class="confirmacion-title">Tu lugar está apartado.</p>
@@ -103,12 +104,12 @@ const activeTier = tier !== null ? tierInfo[tier] : null;
         </p>
       </div>
 
-      <!-- Confirmación: lista de interés Cohorte 4 -->
+      <!-- Confirmación: lista de interés de la cohorte siguiente -->
       <div id="confirmacion-c4" class="confirmacion" hidden>
         <span class="eyebrow">¡Anotado!</span>
         <p id="saludo-confirmacion-c4" class="confirmacion-title">Estás en la lista.</p>
         <p style="margin: 0; font-size: 15.5px; line-height: 1.6; color: var(--fg-2);">
-          Eres de los primeros en la lista de interés para <b style="color: var(--fg-1);">Cohorte 4</b>.
+          Eres de los primeros en la lista de interés para <b style="color: var(--fg-1);">Cohorte {COHORTE.siguienteNumero}</b>.
           Cuando abramos inscripciones, te avisamos antes que a nadie.
         </p>
       </div>
@@ -175,13 +176,13 @@ const activeTier = tier !== null ? tierInfo[tier] : null;
         form.style.display = "none";
         confirmacionInscrito?.removeAttribute("hidden");
       } else if (resBody.nivelAsignado !== null) {
-        track("registration_success", { form_id: "registro_cohorte_3" });
+        track("registration_success", { form_id: `registro_cohorte_${COHORTE.numero}` });
         if (typeof window.fbq === "function") window.fbq("track", "Lead");
         if (saludoEl) saludoEl.textContent = `${firstName}, tu lugar está apartado.`;
         form.style.display = "none";
         confirmacion?.removeAttribute("hidden");
       } else {
-        track("registration_success", { form_id: "interes_cohorte_4" });
+        track("registration_success", { form_id: `interes_cohorte_${COHORTE.siguienteNumero}` });
         if (saludoElC4) saludoElC4.textContent = `${firstName}, estás en la lista.`;
         form.style.display = "none";
         confirmacionC4?.removeAttribute("hidden");

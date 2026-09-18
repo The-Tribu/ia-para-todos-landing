@@ -4,6 +4,7 @@
 // Nivel vigente destacado con borde accent + glow.
 
 import { FALLBACK_TIER_STATUS } from "../lib/brevo";
+import { COHORTE, CUPOS_TOTALES, TIERS } from "../lib/cohorte";
 
 interface Props {
   tier?: 1 | 2 | 3 | null;
@@ -15,11 +16,7 @@ const {
   cuposDisponibles = FALLBACK_TIER_STATUS.cuposDisponibles,
 } = Astro.props;
 
-const tiers = [
-  { id: 1, nombre: "Pioneros", precio: "$400.000", cuposCap: 4 },
-  { id: 2, nombre: "Early Bird", precio: "$460.000", cuposCap: 6 },
-  { id: 3, nombre: "General", precio: "$540.000", cuposCap: 2 },
-] as const;
+const tiers = TIERS;
 ---
 
 <section data-screen-label="09 Precio" style="padding: clamp(64px, 10vw, 120px) 0;">
@@ -30,17 +27,17 @@ const tiers = [
       <h2
         style="font-family: var(--font-display); font-weight: 700; font-size: clamp(26px, 4.6vw, 40px); line-height: 1.15; letter-spacing: -0.02em; margin: 0;"
       >
-        12 cupos. Se acaban cuando se acaban las sillas.
+        {CUPOS_TOTALES} cupos. Se acaban cuando se acaban las sillas.
       </h2>
       <p style="margin: 0; font-size: 16px; line-height: 1.6; color: var(--fg-2);">
-        Presencial, sin transmisión virtual. Cuando se acaban las sillas de Cotecnova, se acaban
+        Presencial, sin transmisión virtual. Cuando se acaban las sillas del salón, se acaban
         los cupos.
       </p>
     </div>
 
     {tier === null && (
       <div class="sold-out-banner">
-        <span>Todos los cupos de Cohorte 3 están asignados</span>
+        <span>Todos los cupos de Cohorte {COHORTE.numero} están asignados</span>
       </div>
     )}
 
@@ -81,11 +78,11 @@ const tiers = [
       style="display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; padding-top: 4px;"
     >
       <p style="margin: 0; font-size: 15px; color: var(--fg-4);">
-        Precio de referencia del programa: <s style="color: var(--fg-4);">$600.000 COP</s> — no
-        se vende a este nivel.
+        Precio de referencia del programa: <s style="color: var(--fg-4);">{COHORTE.precioAncla}</s>
+        — no se vende a este nivel.
       </p>
       <a href="#registro" class="btn-primary" style="padding: 14px 26px;" id="pricing-cta">
-        {tier !== null ? "Reserva tu cupo" : "Lista de interés Cohorte 4"}
+        {tier !== null ? "Reserva tu cupo" : `Lista de interés Cohorte ${COHORTE.siguienteNumero}`}
       </a>
     </div>
   </div>

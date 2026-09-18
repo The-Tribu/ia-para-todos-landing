@@ -3,9 +3,10 @@
 // Es la única fuga de atención intencional de la landing (retargeting Etapa 3 del funnel,
 // ver docs/estrategia-marketing.md). Abre el chat con el mensaje ya redactado.
 
+import { MARCA } from "../lib/cohorte";
+
 const WHATSAPP_NUMERO = "573052666114"; // +57 305 266 6114
-const MENSAJE =
-  "Hola The Tribu, estoy interesado en el curso de IA Para Todos, ¿me podrías dar más información?";
+const MENSAJE = `Hola ${MARCA}, estoy interesado en el curso de IA Para Todos, ¿me podrías dar más información?`;
 
 const href = `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(MENSAJE)}`;
 ---
