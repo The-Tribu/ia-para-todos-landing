@@ -12,6 +12,7 @@ import Pricing from "../components/Pricing.astro";
 import FAQ from "../components/FAQ.astro";
 import Registration from "../components/Registration.astro";
 import Footer from "../components/Footer.astro";
+import WhatsAppBubble from "../components/WhatsAppBubble.astro";
 import { FALLBACK_TIER_STATUS, getTierStatus } from "../lib/brevo";
 
 const apiKey = import.meta.env.BREVO_API_KEY;
@@ -35,4 +36,5 @@ const { tier, cuposDisponibles } = apiKey
   <FAQ />
   <Registration tier={tier} cuposDisponibles={cuposDisponibles} />
   <Footer />
+  <WhatsAppBubble />
 </Layout>
