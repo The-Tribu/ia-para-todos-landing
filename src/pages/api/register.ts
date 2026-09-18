@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { getTierStatus } from "../../lib/brevo";
+import { COHORTE } from "../../lib/cohorte";
 
 export const prerender = false;
 
@@ -64,13 +65,13 @@ export const POST: APIRoute = async ({ request }) => {
     tier !== null
       ? {
           email,
-          attributes: { ...baseAttributes, ESTADO_PAGO: 2, COHORTE: "cohorte-3", NIVEL: tier },
+          attributes: { ...baseAttributes, ESTADO_PAGO: 2, COHORTE: COHORTE.slug, NIVEL: tier },
           listIds: BREVO_LIST_ID > 0 ? [BREVO_LIST_ID] : undefined,
           updateEnabled: true,
         }
       : {
           email,
-          attributes: { ...baseAttributes, ESTADO_PAGO: 1, COHORTE: "cohorte-4" },
+          attributes: { ...baseAttributes, ESTADO_PAGO: 2, COHORTE: COHORTE.siguienteSlug },
           listIds: BREVO_LIST_ID > 0 ? [BREVO_LIST_ID] : undefined,
           updateEnabled: true,
         };

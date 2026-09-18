@@ -4,6 +4,7 @@
 // CTA hace scroll suave a #registro.
 
 import { FALLBACK_TIER_STATUS } from "../lib/brevo";
+import { COHORTE, TIERS } from "../lib/cohorte";
 
 interface Props {
   tier?: 1 | 2 | 3 | null;
@@ -15,11 +16,9 @@ const {
   cuposDisponibles = FALLBACK_TIER_STATUS.cuposDisponibles,
 } = Astro.props;
 
-const tierLabel: Record<1 | 2 | 3, string> = {
-  1: `Pioneros · $400.000`,
-  2: `Early Bird · $460.000`,
-  3: `General · $540.000`,
-};
+const tierLabel = Object.fromEntries(
+  TIERS.map((t) => [t.id, `${t.nombre} · ${t.precio}`])
+) as Record<1 | 2 | 3, string>;
 ---
 
 <section
@@ -29,7 +28,7 @@ const tierLabel: Record<1 | 2 | 3, string> = {
   <!-- Foto de fondo cohorte -->
   <img
     src="/hero/fondo-cohorte.webp"
-    alt="Estudiantes de IA para Todos en Cotecnova, Cartago"
+    alt="Estudiantes de una cohorte anterior de IA para Todos en clase, Cartago"
     width="1440"
     height="1080"
     fetchpriority="high"
@@ -58,15 +57,16 @@ const tierLabel: Record<1 | 2 | 3, string> = {
       <p
         style="font-family: var(--font-body); font-size: clamp(16px, 2.4vw, 20px); line-height: 1.55; color: var(--fg-2); margin: 0; max-width: 30ch; font-weight: 500;"
       >
-        4 sábados presenciales en Cartago · 12 horas · Sin necesitar saber programar
+        {COHORTE.sesiones} sábados presenciales en Cartago · {COHORTE.duracion} · Sin necesitar
+        saber programar
       </p>
       <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
         <a href="#registro" class="btn-primary" style="padding: 16px 30px; font-size: 17px;" id="hero-cta">
-          {tier !== null ? "Reserva tu cupo" : "Lista de interés Cohorte 4"}
+          {tier !== null ? "Reserva tu cupo" : `Lista de interés Cohorte ${COHORTE.siguienteNumero}`}
         </a>
         {tier !== null
           ? <span class="cupos-badge">{cuposDisponibles} {cuposDisponibles === 1 ? "cupo" : "cupos"} · {tierLabel[tier]}</span>
-          : <span class="cupos-badge cupos-badge--agotado">Cohorte 3 completa</span>
+          : <span class="cupos-badge cupos-badge--agotado">Cohorte {COHORTE.numero} completa</span>
         }
       </div>
     </div>

@@ -3,12 +3,13 @@
 // Lista vertical con ícono + título + detalle.
 // Los diferenciadores (Certificado, Claude Pro y Proyecto final) cierran la misma lista
 // y se distinguen solo por el color del ícono y de la tipografía.
+import { COHORTE } from "../lib/cohorte";
 import IncludesRow, { type Item } from "./IncludesRow.astro";
 
 const items: Item[] = [
   {
     title: "Formación práctica",
-    detail: "12 horas · 4 sábados · 9:00 AM – 12:00 PM",
+    detail: `${COHORTE.duracion} · ${COHORTE.sesiones} sábados · ${COHORTE.horario}`,
     icon: "calendar",
   },
   {
