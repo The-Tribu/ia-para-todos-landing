@@ -82,15 +82,15 @@ El ciclo se representa como **diagrama circular**, no como texto corrido:
 | Beneficio | Detalle |
 |-----------|---------|
 | Formación práctica | 12 horas · 4 sábados · 9:00 AM – 12:00 PM |
-| Certificado | Certificado virtual — *Inteligencia Artificial Aplicada al Trabajo Profesional* · apto para LinkedIn |
 | Comunidad | Grupo privado de WhatsApp con acceso directo al instructor |
 | Recursos | Materiales y recursos de por vida |
+| Certificado | Certificado virtual — *Inteligencia Artificial Aplicada al Trabajo Profesional* — eyebrow *apto para LinkedIn* |
 | Claude Pro | Acceso durante todo el programa (~$86,000 COP de valor) — eyebrow *incluido sin costo* |
 | Proyecto final | Personalizado a la profesión del estudiante — eyebrow *el diferenciador* |
 
 **Formato:** lista vertical de una sola columna (no grid, no tarjetas). Seis filas con ícono + título + una línea de detalle. Los íconos alineados en columna fija a la izquierda — crean eje vertical de lectura, no decoran.
 
-Las dos últimas filas (Claude Pro y Proyecto final) van agrupadas en un bloque destacado que cierra la sección: fondo `--bg-2`, barra de acento a la izquierda, ícono y título en acento y eyebrow propio. Son los dos argumentos más fuertes de la sección — el valor monetario incluido y el diferenciador del curso — y la lectura debe terminar en ellos, justo antes del scroll hacia precio.
+Las tres últimas filas (Certificado, Claude Pro y Proyecto final) cierran la sección dentro de la misma lista, sin tarjeta ni contenedor propio: conservan la métrica de las demás filas y se distinguen solo por color — ícono y título en acento, detalle en `--fg-1` y eyebrow propio. Son los argumentos más fuertes de la sección — el respaldo certificable, el valor monetario incluido y el diferenciador del curso — y la lectura debe terminar en ellos, justo antes del scroll hacia precio.
 
 ---
 

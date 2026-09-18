@@ -1,6 +1,7 @@
 ---
 // Fila de la sección 06 — ícono + título (+ eyebrow) + detalle.
-// Se usa dos veces desde Includes.astro: en la lista base y en el bloque destacado.
+// Los ítems `featured` conservan la misma métrica de la lista: solo cambian
+// el color del ícono y de la tipografía.
 // Íconos Lucide (stroke 1.75px, 22px, currentColor).
 
 export interface Item {
@@ -29,7 +30,7 @@ const icons: Record<string, string> = {
 };
 ---
 
-<div class:list={["includes-row", featured && "featured"]}>
+<div class="includes-row">
   <svg
     viewBox="0 0 24 24"
     width="22"
@@ -50,11 +51,7 @@ const icons: Record<string, string> = {
       <p class:list={["includes-title", featured && "featured-title"]}>{title}</p>
       {eyebrow && <span class="eyebrow" style="font-size: 10.5px;">{eyebrow}</span>}
     </div>
-    <p
-      class="includes-detail"
-      style={featured ? "font-size: 16.5px; color: var(--fg-1);" : ""}
-      set:html={detail}
-    />
+    <p class:list={["includes-detail", featured && "featured-detail"]} set:html={detail} />
   </div>
 </div>
 
@@ -67,9 +64,6 @@ const icons: Record<string, string> = {
     padding: 20px 0;
     border-bottom: 1px solid var(--border-default);
   }
-  .includes-row.featured {
-    padding: 24px 0;
-  }
   .includes-title {
     margin: 0;
     font-family: var(--font-display);
@@ -79,7 +73,7 @@ const icons: Record<string, string> = {
     letter-spacing: -0.01em;
   }
   .includes-title.featured-title {
-    font-size: clamp(19px, 2.6vw, 22px);
+    color: var(--accent-ink);
   }
   .includes-detail {
     margin: 0;
@@ -88,5 +82,8 @@ const icons: Record<string, string> = {
     font-size: 15.5px;
     line-height: 1.55;
     color: var(--fg-2);
+  }
+  .includes-detail.featured-detail {
+    color: var(--fg-1);
   }
 </style>
