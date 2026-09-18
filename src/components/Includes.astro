@@ -1,8 +1,8 @@
 ---
 // Sección 06 — Qué incluye
 // Lista vertical con ícono + título + detalle.
-// Los dos diferenciadores (Claude Pro + Proyecto final) cierran la sección
-// agrupados en un bloque destacado.
+// Los diferenciadores (Certificado, Claude Pro y Proyecto final) cierran la misma lista
+// y se distinguen solo por el color del ícono y de la tipografía.
 import IncludesRow, { type Item } from "./IncludesRow.astro";
 
 const items: Item[] = [
@@ -10,12 +10,6 @@ const items: Item[] = [
     title: "Formación práctica",
     detail: "12 horas · 4 sábados · 9:00 AM – 12:00 PM",
     icon: "calendar",
-  },
-  {
-    title: "Certificado",
-    detail:
-      "Certificado virtual — <i>Inteligencia Artificial Aplicada al Trabajo Profesional</i> · apto para LinkedIn",
-    icon: "award",
   },
   {
     title: "Comunidad",
@@ -26,6 +20,13 @@ const items: Item[] = [
     title: "Recursos",
     detail: "Materiales y recursos de por vida",
     icon: "download",
+  },
+  {
+    title: "Certificado",
+    detail: "Certificado virtual — <i>Inteligencia Artificial Aplicada al Trabajo Profesional</i>",
+    icon: "award",
+    featured: true,
+    eyebrow: "apto para LinkedIn",
   },
   {
     title: "Claude Pro",
@@ -42,9 +43,6 @@ const items: Item[] = [
     eyebrow: "el diferenciador",
   },
 ];
-
-const baseItems = items.filter((item) => !item.featured);
-const featuredItems = items.filter((item) => item.featured);
 ---
 
 <section
@@ -59,13 +57,8 @@ const featuredItems = items.filter((item) => item.featured);
     >
       Qué incluye
     </h2>
-    <div style="display: flex; flex-direction: column; gap: 14px;">
-      <div class="includes-list">
-        {baseItems.map((item) => <IncludesRow {...item} />)}
-      </div>
-      <div class="includes-highlight">
-        {featuredItems.map((item) => <IncludesRow {...item} />)}
-      </div>
+    <div class="includes-list">
+      {items.map((item) => <IncludesRow {...item} />)}
     </div>
   </div>
 </section>
@@ -75,19 +68,6 @@ const featuredItems = items.filter((item) => item.featured);
     display: flex;
     flex-direction: column;
     max-width: 780px;
-    border-top: 1px solid var(--border-default);
-  }
-  .includes-highlight {
-    max-width: 780px;
-    background: var(--bg-2);
-    border-left: 3px solid var(--accent-ink);
-    border-radius: var(--radius-xs) var(--radius-md) var(--radius-md) var(--radius-xs);
-    padding: clamp(4px, 1.5vw, 10px) clamp(18px, 3vw, 26px);
-  }
-  .includes-highlight :global(.includes-row) {
-    border-bottom: none;
-  }
-  .includes-highlight :global(.includes-row + .includes-row) {
     border-top: 1px solid var(--border-default);
   }
 </style>
