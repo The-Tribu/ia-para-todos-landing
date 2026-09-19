@@ -34,13 +34,15 @@ Lista de ítems sin resolver para finalizar la página web antes del deadline (5
 
 ## Flujo de correos electrónicos — Brevo
 
-La secuencia completa está definida en `docs/estrategia-marketing.md` pero **no está configurada en Brevo todavía**. Bloquea el lanzamiento porque sin los correos nadie que se registre recibirá confirmación ni seguimiento.
+La secuencia completa está definida en `docs/estrategia-marketing.md`. El modelo de datos completo
+(listas, atributos, qué dispara cada flujo) está en **[brevo.md](./brevo.md)** — acá va solo lo que
+queda por hacer.
 
 ### Atributos de contacto usados en `src/lib/brevo.ts`
 
 | Atributo Brevo | Valores posibles | Qué indica |
 |----------------|-----------------|------------|
-| `COHORTE` | `"cohorte-3"` \| `"cohorte-4"` | A qué cohorte pertenece el registro (`cohorte-4` = lista de espera) |
+| `COHORTE` | `"cohorte-4"` \| `"cohorte-5"` | A cuál se le asoció **al registrarse** — no a cuál va a entrar. `cohorte-5` = llegó sin cupo ⚠️ ver [brevo.md](./brevo.md#conteo-de-cupos-y-el-id-de-la-lista-de-estudiantes) |
 | `NIVEL` | `"1"` \| `"2"` \| `"3"` \| `"4"` | Tier de precio asignado (Pioneros / Early Bird / General / regalo) |
 | `ESTADO_PAGO` | `"1"` prospecto \| `"2"` pendiente por pagar \| `"3"` pagado | Estado del pago |
 
@@ -50,7 +52,7 @@ La secuencia completa está definida en `docs/estrategia-marketing.md` pero **no
 prospectos. Un cupo se considera ocupado solo cuando se cumplen **ambas** condiciones:
 
 1. el contacto está en la lista de estudiantes, **y**
-2. tiene `ESTADO_PAGO = "3"` (pagado) con `COHORTE = "cohorte-3"`.
+2. tiene `ESTADO_PAGO = "3"` (pagado) con `COHORTE` igual al slug de la cohorte vigente.
 
 `NIVEL = "4"` (regalo) **no ocupa cupo**: no cuenta para ningún tier de precio ni para el total de 12.
 
@@ -62,16 +64,25 @@ Crear los atributos personalizados en **Brevo → Contacts → Settings → Cont
 - `PROFESION` — tipo texto (lo envía el formulario, campo `profesion`)
 
 ### Paso 2 — Listas de contactos
-Son **dos** listas en **Brevo → Contacts → Lists**, con roles distintos:
+
+Hay **tres clases** de lista, no dos (detalle completo en [brevo.md](./brevo.md#las-tres-clases-de-lista)):
 
 | Lista | ID | Variable de entorno | Rol |
 |-------|----|---------------------|-----|
-| `IAT \| Prospectos` | 11 | `BREVO_LIST_ID` | Donde el formulario de la landing crea o actualiza el contacto |
-| `IAT-C3 \| Estudiantes` | 13 | `BREVO_STUDENTS_LIST_ID` | Quien ya se inscribió — de aquí sale el conteo de cupos |
+| `IAT \| Prospectos` | 11 | `BREVO_LIST_ID` | No ha pagado. Donde el formulario crea o actualiza el contacto |
+| `IAT-C3 \| Estudiantes` | 13 | `BREVO_STUDENTS_LIST_ID` | Estudiantes de C3 — de aquí sale el conteo de cupos |
+| `IAT-C4 \| Estudiantes` | 🔴 **no existe** | — | **Hay que crearla antes de abrir la venta** |
+| `IAT \| Alumnis` | 14 | — | Graduados de todas las cohortes |
+| `IAT-C1 \| Graduados` / `IAT-C2 \| Graduados` | 15 / 16 | — | Cohortes cerradas |
 
-**El paso de una lista a otra es manual.** Cuando alguien confirma el pago, Jorge mueve el contacto a
-`IAT-C3 | Estudiantes` y le pone `ESTADO_PAGO = 3`. La landing nunca escribe en la lista de
-estudiantes: solo la lee.
+**El paso de prospectos a la lista de cohorte NO lo hace la landing.** Lo hace la skill `confirm-pago`
+de Claude Code cuando Jorge confirma el pago: actualiza `ESTADO_PAGO = 3`, retira de la 11 y agrega a
+la lista de la cohorte. La landing nunca escribe en la lista de estudiantes: solo la lee.
+
+🔴 **Bloqueante para abrir la venta de C4:** `BREVO_STUDENTS_LIST_ID` sigue apuntando a `13`, que es la
+lista de Cohorte 3. Como los estudiantes de C4 entrarán a `IAT-C4 | Estudiantes` (que aún no existe),
+el conteo de cupos de C4 da cero de forma indefinida y la landing se queda anunciando Pioneros para
+siempre. Hay que crear la lista, anotar su ID y apuntar la variable ahí.
 
 ### Paso 3 — 5 plantillas de correo (crear en Brevo → Email → Templates)
 
@@ -84,9 +95,22 @@ estudiantes: solo la lee.
 | 5 | "Última oportunidad — tu cupo se libera mañana" | 48 h antes del cierre de ventas (16 sep) | Último aviso, urgencia máxima |
 
 ### Paso 4 — Automatización en Brevo (Automation → Create workflow)
-- **Trigger:** contacto añadido a la lista de prospectos (`BREVO_LIST_ID`) con `COHORTE = cohorte-3`
-- **Condición de salida:** `ESTADO_PAGO = 3` (pagó → salir de la secuencia)
-- **Flujo:** enviar correo 1 → esperar 24 h → si no pagó, correo 2 → esperar 48 h → correo 3 → esperar 2–3 días → correo 4 → esperar hasta 48 h antes del 17 sep → correo 5
+
+⚠️ **El disparador está sin confirmar y es lo primero que hay que resolver.** Según Jorge (19 sep 2026)
+los flujos automáticos ya **no** se disparan por cambios de atributo sino por **cambios de lista**,
+pero ese cambio no está registrado en el second brain, que a esa fecha seguía documentando el disparo
+por `ESTADO_PAGO`. Falta:
+
+- el **mapeo lista → automation**: qué workflow dispara cada lista, al entrar y al salir;
+- el **motivo** del cambio;
+- si implica que `/api/register` deba escribir en otra lista o mover el contacto — hoy solo escribe en la 11.
+
+La fuente real es `skills/_shared/brevo-modelo-de-datos.md`, en el vault de origen (la VPS). Ver
+[brevo.md](./brevo.md#qué-dispara-los-flujos-automáticos) antes de configurar nada.
+
+- **Flujo (sin cambios):** correo 1 → esperar 24 h → si no pagó, correo 2 → esperar 48 h → correo 3 → esperar 2–3 días → correo 4 → esperar hasta 48 h antes del cierre → correo 5
+- ⚠️ **Revisar qué plantilla envía realmente:** las copias `_step_#N` que genera Automations pueden
+  seguir diciendo "Cohorte 3". Pregunta abierta registrada en el vault.
 
 ### Paso 5 — Sender (remitente)
 Verificar o crear el sender en **Brevo → Senders** con el email y nombre desde donde saldrán los correos (ej. `jorge@thetribu.co` · "Jorge — IA para Todos").
@@ -124,11 +148,14 @@ Estas claves están en `docs/stack.md` como TBD y bloquean funciones en producci
 - [x] OG image creada y `og:image` agregado en `Layout.astro` → link preview correcto en WhatsApp
 - [ ] Atributos de contacto creados en Brevo (`COHORTE`, `NIVEL`, `ESTADO_PAGO`, `PROFESION`)
 - [ ] 5 plantillas de correo creadas en Brevo
+- [ ] Confirmado con Jorge el disparador real (¿cambio de lista o cambio de atributo?) y documentado el mapeo lista → automation
+- [ ] `IAT-C4 | Estudiantes` creada en Brevo y `BREVO_STUDENTS_LIST_ID` apuntando a su ID
 - [ ] Automatización de Brevo configurada y probada (trigger → 5 correos → salida al pagar)
+- [ ] Verificado que los correos que salen no dicen "Cohorte 3" (plantillas madre vs. copias `_step_#N`)
 - [ ] Sender verificado en Brevo
 - [ ] `META_PIXEL_ID` configurado en Vercel → `fbq` se dispara en `PageView` y `Lead`
 - [ ] `BREVO_API_KEY`, `BREVO_LIST_ID` (11) y `BREVO_STUDENTS_LIST_ID` (13) configurados en Vercel → formulario funciona en producción
-- [ ] El conteo de cupos de la landing coincide con la lista `IAT-C3 | Estudiantes` (solo contactos con `ESTADO_PAGO = 3`, ignorando `NIVEL = 4`)
+- [ ] El conteo de cupos de la landing coincide con la lista de estudiantes de la cohorte vigente (solo contactos con `ESTADO_PAGO = 3`, ignorando `NIVEL = 4`)
 - [ ] Flujo completo del formulario probado end-to-end: submit → contacto en Brevo → correo 1 llega
 - [ ] Google Analytics activo y recibiendo hits
 - [ ] Vercel preview URL revisada en móvil (< 390 px) y escritorio
