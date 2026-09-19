@@ -45,9 +45,11 @@
               ┌──────────┴───────────┐
               ▼                      ▼
          Paga solo             Se traba →
-         (mover a la lista     WhatsApp → Jorge cierra
-          IAT-C3 | Estudiantes
-          + ESTADO_PAGO = 3)
+         (skill confirm-pago:  WhatsApp → Jorge cierra
+          ESTADO_PAGO = 3,
+          sale de la 11,
+          entra a la lista
+          de su cohorte)
 ```
 
 ## El Funnel — 3 Etapas (Meta Ads)
@@ -73,7 +75,10 @@
 
 ## Secuencia de Nutrición — Brevo (5 correos)
 
-Se activa automáticamente cuando alguien completa el formulario con estado "pendiente por pagar".
+Se activa automáticamente al registrarse. ⚠️ **El disparador exacto está sin confirmar:** según Jorge
+(19 sep 2026) los flujos ya no se disparan por cambio de atributo sino por **cambio de lista**, pero
+el second brain todavía documenta lo contrario. Ver
+[brevo.md](./brevo.md#qué-dispara-los-flujos-automáticos).
 
 | # | Cuándo | Objetivo | Contenido |
 |---|--------|----------|-----------|
