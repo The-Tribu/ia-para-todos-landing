@@ -119,6 +119,7 @@ const activeTier = tier !== null ? tierInfo[tier] : null;
 
 <script>
   import { track } from "@vercel/analytics";
+  import { COHORTE } from "../lib/cohorte";
 
   const form = document.getElementById("form-registro") as HTMLFormElement | null;
   const confirmacion = document.getElementById("confirmacion");
